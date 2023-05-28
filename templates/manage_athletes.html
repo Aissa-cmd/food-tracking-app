@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Food Tracker | {{ title }}{% endblock %}
+
+{% block body %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-4" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+<div style="display:flex;justify-content: space-between;" class="mt-4 mb-4">
+    <h5>List des triathletes</h5>
+    <a href="{% url 'athlete_add' %}" class="btn btn-primary"><i class='far fa-plus-square'></i> Ajouter un
+        triathlete</a>
+</div>
+
+<table class="table caption-top">
+    <thead class="table-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nom d'utilisateur</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Nom</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Numéro de téléphone</th>
+            <th scope="col">Sexe</th>
+            <th scope="col">Date de naissance</th>
+            <th scope="col">adresse</th>
+            <th scope="col">Poids</th>
+            <th scope="col">Hauteur</th>
+            <th scope="col">Calories quotidiennes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for atl in triathlete %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ atl.user.username }}</td>
+            <td>{{ atl.user.last_name }}</td>
+            <td>{{ atl.user.first_name }}</td>
+            <td>{{ atl.user.email|default:'-' }}</td>
+            <td>{{ atl.phone_number|default:'-' }}</td>
+            <td>{{ atl.gender|default:'-' }}</td>
+            <td>{{ atl.date_of_birth|default:'-' }}</td>
+            <td>{{ atl.address|default:'-' }}</td>
+            <td>{{ atl.weight|default:'-' }}</td>
+            <td>{{ atl.height|default:'-' }}</td>
+            <td>{{ atl.daily_calories|default:'-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock body %}

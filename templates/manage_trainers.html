@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Food Tracker | {{ title }}{% endblock %}
+
+{% block body %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-4" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+<div style="display:flex;justify-content: space-between;" class="mt-4 mb-4">
+    <h5>List des entraineur</h5>
+    <a href="{% url 'trainer_add' %}" class="btn btn-primary"><i class='far fa-plus-square'></i> Ajouter un
+        entraîneur</a>
+</div>
+
+<table class="table caption-top">
+    <thead class="table-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nom d'utilisateur</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Nom</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Numéro de téléphone</th>
+            <th scope="col" class="text-center">Modifier</th>
+            <th scope="col" class="text-center">Supprimer</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ent in entraineur %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ ent.user.username }}</td>
+            <td>{{ ent.user.last_name }}</td>
+            <td>{{ ent.user.first_name }}</td>
+            <td>{{ ent.user.email|default:'-' }}</td>
+            <td>{{ ent.phone_number }}</td>
+            <td class="text-center">
+                <a class="btn btn-primary" href="{% url 'trainer_edit' pk=ent.user.id %}">
+                    <i class="fas fa-sharp fa-solid fa-pen"></i>
+                </a>
+            </td>
+            <td class="text-center">
+                <a class="btn btn-danger" href="{% url 'trainer_delete' pk=ent.user.id %}">
+                    <i class="fas fa-solid fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock body %}
