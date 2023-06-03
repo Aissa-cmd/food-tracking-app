@@ -17,6 +17,7 @@ from .models import (
     Weight,
     Entraineur,
     Triathlete,
+    Aliment,
 )
 from .forms import (
     FoodForm,
@@ -25,6 +26,7 @@ from .forms import (
     EntraineurEditForm,
     TriathleteForm,
     TriathleteEditForm,
+    AlimentForm,
 )
 
 
@@ -98,7 +100,7 @@ def trainers_delete_view(request, pk):
         else:
             return render(request, 'delete_confirmation.html', {
                 'title': "Supprimer l'entraîneur",
-                'message': "Êtes-vous sûr de vouloir supprimer cet entraîneur",
+                'message': "Êtes-vous sûr de vouloir supprimer cet entraîneur?",
                 'cancell_url': "entraineurs"
             })
     except User.DoesNotExist:
@@ -222,12 +224,47 @@ def athlete_delete_view(request, pk):
         else:
             return render(request, 'delete_confirmation.html', {
                 'title': "Supprimer Le triathlète",
-                'message': "Êtes-vous sûr de vouloir supprimer cet triathlète",
+                'message': "Êtes-vous sûr de vouloir supprimer cet triathlète?",
                 'cancell_url': "triathletes"
             })
     except User.DoesNotExist:
         messages.error(request, "Le triathlète n'existe pas")
         return redirect(reverse('triathletes'))
+
+
+@login_required
+def manage_aliments(request):
+    return render(request, 'manage_food.html')
+
+
+@login_required
+def aliment_add_view(request):
+    if request.method == 'POST':
+        aliment_form = AlimentForm(request.POST, request.FILES)
+        if aliment_form.is_valid():
+            image = aliment_form.cleaned_data['image']
+            name = aliment_form.cleaned_data['name']
+            weight_g = aliment_form.cleaned_data['weight_g']
+            energy_value = aliment_form.cleaned_data['energy_value']
+            # total_energy_value = aliment_form.cleaned_data['total_energy_value']
+            # create aliment
+            new_aliment = Aliment.objects.create(
+                image=image,
+                name=name,
+                weight_g=weight_g,
+                energy_value=energy_value,
+                # total_energy_value=total_energy_value,
+            )
+            new_aliment.save()
+            messages.success(request, f"L' aliment a été créé avec succès")
+            return redirect(reverse('aliments'))
+        else:
+            return render(request, 'aliment_add.html', {
+                'form': aliment_form,
+            })
+    return render(request, 'aliment_add.html', {
+        'form': AlimentForm(),
+    })
 
 
 def register(request):

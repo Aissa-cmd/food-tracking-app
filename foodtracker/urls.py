@@ -29,4 +29,9 @@ urlpatterns = [
     path('triathletes/add', views.athlete_add_view, name='athlete_add'),
     path('triathletes/edit/<int:pk>', views.athlete_edit_view, name="athlete_edit"),
     path('triathletes/delete/<int:pk>', views.athlete_delete_view, name="athlete_delete"),
+
+    path('aliments', views.manage_aliments, name='aliments'),
+    path('aliments/add', views.aliment_add_view, name='aliement_add'),
+    # path('aliments/edit/<int:pk>', views.aliment_edit_view, name='aliment_edit'),
+    # path('aliments/delete/<int:pk>', views.aliment_delete_views, name='aliment_delete'),
 ]

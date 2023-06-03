@@ -1,3 +1,4 @@
+from typing import Iterable, Optional
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -46,6 +47,24 @@ class Entraineur(models.Model):
 
     class Meta:
         db_table = 'entraineurs'
+
+
+class Aliment(models.Model):
+    image = models.ImageField(upload_to='images/')
+    name = models.CharField(max_length=255)
+    # le poids en gramme
+    weight_g = models.DecimalField(max_digits=8, decimal_places=2)
+    # Valeur  énergétique (kcal/g)
+    energy_value = models.DecimalField(max_digits=8, decimal_places=2)
+    # Valeur énergétique totale (kcal)
+    total_energy_value = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+
+    def save(self, *args, **kwargs):
+        self.total_energy_value = self.weight_g * self.energy_value
+        return super().save(*args, **kwargs)
+
+    class Meta:
+        db_table = 'aliments'
 
 
 class FoodCategory(models.Model):

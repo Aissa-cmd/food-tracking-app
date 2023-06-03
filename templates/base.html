@@ -58,11 +58,11 @@
                             {% endfor %}
                         </div>
                     </li>
-                    <li class='nav-item'>
+                    <!-- <li class='nav-item'>
                         <a class='nav-link' href="{% url 'food_add' %}">
                             <i class='far fa-plus-square'></i> Add Food Item
                         </a>
-                    </li>
+                    </li> -->
                     {% if user.role == 'TRIATHLETE' %}
                     <li class='nav-item'>
                         <a class='nav-link' href="{% url 'food_log' %}">
@@ -71,6 +71,11 @@
                     </li>
                     {% endif %}
                     {% if user.role == 'ADMIN' %}
+                    <li class='nav-item'>
+                        <a class='nav-link' href="{% url 'aliments' %}">
+                            <i class="fas fa-apple-alt"></i> Gérer les aliments
+                        </a>
+                    </li>
                     <li class='nav-item'>
                         <a class='nav-link' href="{% url 'entraineurs' %}">
                             <i class='fas fa-solid fa-user'></i> Gérer les entraineur
