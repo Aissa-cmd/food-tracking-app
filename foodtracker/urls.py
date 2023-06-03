@@ -27,4 +27,6 @@ urlpatterns = [
 
     path('triathletes', views.manage_athletes, name='triathletes'),
     path('triathletes/add', views.athlete_add_view, name='athlete_add'),
+    path('triathletes/edit/<int:pk>', views.athlete_edit_view, name="athlete_edit"),
+    path('triathletes/delete/<int:pk>', views.athlete_delete_view, name="athlete_delete"),
 ]

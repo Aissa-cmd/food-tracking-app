@@ -89,3 +89,12 @@ class TriathleteForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError({'password2': 'Les deux mots de passe ne correspondent pas'})
         return cleaned_data
+    
+class TriathleteEditForm(forms.Form):
+    first_name = forms.CharField(label='Nom')
+    last_name = forms.CharField(label='Prénom')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'

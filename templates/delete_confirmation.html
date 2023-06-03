@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Food Tracker | {{ title }}{% endblock %}
+
+{% block body %}
+<div class='mt-auto'>
+  <div class='container-fluid px-4'>
+    <h3 class="mb-4 mt-4">{{ title }}</h3>
+    <div class='row justify-content-center'>
+      <div class='col-xl-12'>
+        <div class='card bg-secondary mb-3'>
+          <div class='card-body'>
+            <div class='form-group d-flex align-items-center'>
+              {{ message }}
+              <form method='POST'>
+                {% csrf_token %}
+                <button type='submit' class='btn btn-danger ms-3'>
+                  Supprimer
+                </button>
+              </form>
+              <a href="{% url cancell_url %}" class="btn btn-outline-dark ms-3">Annuler</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Food Tracker | {{ title }}{% endblock %}
+
+{% block body %}
+
+<div class='py-4 mt-auto'>
+    <div class='container px-4'>
+
+        <!-- {% if success %}
+        <br>
+        <div class='alert alert-dismissible alert-success' role='alert'>
+            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+            The new food item added successfully.
+        </div>
+        {% else %} -->
+        <div class='d-flex justify-content-center'>
+            <h3>Modifier les informations du triathlete</h3>
+        </div>
+        <!-- <div class='d-flex justify-content-center'>
+            <p>Enter the details of a new food item</p>
+        </div> -->
+
+        <div class='row'>
+            <div class='col-lg-6 offset-lg-3'>
+                <div class='card bg-secondary mb-3'>
+                    <div class='card-body'>
+
+                        <div class='form-group'>
+                            <form action="{% url 'athlete_edit' pk=user.id %}" method='POST'>
+                                {% csrf_token %}
+                                <div class='form-group'>
+                                    <!-- {{ form.as_p }} -->
+                                    {% for field in form %}
+                                    <p>
+                                        {{ field.label_tag }} {{ field }}
+                                        {% for error in field.errors %}
+                                    <div id="emailHelp" class="form-text text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                    </p>
+                                    {% endfor %}
+                                    <button type='submit' class='btn btn-primary'>Enregistrer</button>
+                                    <a href="{% url 'triathletes' %}" class='btn btn-outline-dark'>Annuler</a>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock body %}

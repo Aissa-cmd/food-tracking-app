@@ -24,6 +24,7 @@ from .forms import (
     EntraineurForm,
     EntraineurEditForm,
     TriathleteForm,
+    TriathleteEditForm,
 )
 
 
@@ -33,6 +34,9 @@ def index(request):
     '''
     return food_list_view(request)
 
+@login_required
+def profile(request):
+    pass
 
 @login_required
 def dashboard(request):
@@ -84,17 +88,21 @@ def trainers_add_view(request):
 
 @login_required
 def trainers_delete_view(request, pk):
-    if request.method == 'GET':
-        # delete entraineur
-        try:
-            user = User.objects.get(pk=pk, role=User.UserRoles.ENTRAINEUR)
+    try:
+        user = User.objects.get(pk=pk, role=User.UserRoles.ENTRAINEUR)
+        if request.method == 'POST':
             deleted, _ = user.delete()
             if deleted:
                 messages.success(request, f"L'entraîneur '{user.first_name} {user.last_name}' a été supprimé avec succès")
                 return redirect(reverse('entraineurs'))
-        except User.DoesNotExist:
-            messages.error(request, "L'entraîneur n'existe pas")
-            return redirect(reverse('entraineurs'))
+        else:
+            return render(request, 'delete_confirmation.html', {
+                'title': "Supprimer l'entraîneur",
+                'message': "Êtes-vous sûr de vouloir supprimer cet entraîneur",
+                'cancell_url': "entraineurs"
+            })
+    except User.DoesNotExist:
+        messages.error(request, "L'entraîneur n'existe pas")
         return redirect(reverse('entraineurs'))
 
 
@@ -114,12 +122,10 @@ def trainers_edit_view(request, pk):
                 messages.success(request, "Les informations du entraineur ont été mises à jour avec succès")
                 return redirect(reverse('entraineurs'))
             else:
-                return render(request, 'trainer_edit.html',
-                    {
-                        'user': user,
-                        'form': form
-                    }
-                )
+                return render(request, 'trainer_edit.html', {
+                    'user': user,
+                    'form': form
+                })
         else:
             form = EntraineurEditForm({
                 'first_name': user.first_name,
@@ -127,12 +133,10 @@ def trainers_edit_view(request, pk):
                 'email': user.email,
                 'phone_number': user.profile_entraineur.phone_number,
             })
-            return render(request, 'trainer_edit.html',
-                {
-                    'user': user,
-                    'form': form
-                }
-            )
+            return render(request, 'trainer_edit.html', {
+                'user': user,
+                'form': form
+            })
     except User.DoesNotExist:
         messages.error(request, "L'entraîneur n'existe pas")
         return redirect(reverse('entraineurs'))    
@@ -173,6 +177,57 @@ def athlete_add_view(request):
     return render(request, 'athlete_add.html', {
         'form': TriathleteForm()
     })
+
+
+@login_required
+def athlete_edit_view(request, pk):
+    try:
+        user = User.objects.get(pk=pk, role=User.UserRoles.TRIATHLETE)
+        if request.method == 'POST':
+            form = TriathleteEditForm(request.POST)
+            if form.is_valid():
+                user.first_name = form.cleaned_data.get('first_name', user.first_name)
+                user.last_name = form.cleaned_data.get('last_name', user.last_name)
+                user.save()
+                messages.success(request, "Les informations du triathlete ont été mises à jour avec succès")
+                return redirect(reverse('triathletes'))
+            else:
+                return render(request, 'athelete_edit.html', {
+                    'user': user,
+                    'form': form,
+                })
+        else:
+            form = TriathleteEditForm({
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+            })
+            return render(request, 'athelete_edit.html', {
+                'user': user,
+                'form': form,
+            })
+    except User.DoesNotExist:
+        messages.error(request, "Le triathlete n'existe pas")
+        return redirect(reverse('triathletes'))
+
+
+@login_required
+def athlete_delete_view(request, pk):
+    try:
+        user = User.objects.get(pk=pk, role=User.UserRoles.TRIATHLETE)
+        if request.method == 'POST':
+            deleted, _ = user.delete()
+            if deleted:
+                messages.success(request, f"Le triathlète '{user.first_name} {user.last_name}' a été supprimé avec succès")
+                return redirect(reverse('triathletes'))
+        else:
+            return render(request, 'delete_confirmation.html', {
+                'title': "Supprimer Le triathlète",
+                'message': "Êtes-vous sûr de vouloir supprimer cet triathlète",
+                'cancell_url': "triathletes"
+            })
+    except User.DoesNotExist:
+        messages.error(request, "Le triathlète n'existe pas")
+        return redirect(reverse('triathletes'))
 
 
 def register(request):
