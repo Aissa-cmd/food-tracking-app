@@ -17,8 +17,8 @@ urlpatterns = [
     path('food/foodlog/delete/<int:food_id>', views.food_log_delete, name='food_log_delete'),
     path('food/<str:food_id>', views.food_details_view, name='food_details'),
 
-    path('categories', views.categories_view, name='categories_view'),
-    path('categories/<str:category_name>', views.category_details_view, name='category_details_view'),
+    # path('categories', views.categories_view, name='categories_view'),
+    # path('categories/<str:category_name>', views.category_details_view, name='category_details_view'),
 
     path('entraineurs', views.manage_trainers, name='entraineurs'),
     path('entraineurs/add', views.trainers_add_view, name='trainer_add'),
@@ -29,6 +29,11 @@ urlpatterns = [
     path('triathletes/add', views.athlete_add_view, name='athlete_add'),
     path('triathletes/edit/<int:pk>', views.athlete_edit_view, name="athlete_edit"),
     path('triathletes/delete/<int:pk>', views.athlete_delete_view, name="athlete_delete"),
+
+    path('categories', views.manage_categories, name='categories'),
+    path('categories/add', views.category_add_view, name='category_add'),
+    path('categories/edit/<int:pk>', views.category_edit_view, name='category_edit'),
+    path('categories/delete/<int:pk>', views.category_delete_view, name='category_delete'),
 
     path('aliments', views.manage_aliments, name='aliments'),
     path('aliments/add', views.aliment_add_view, name='aliement_add'),

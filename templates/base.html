@@ -42,22 +42,7 @@
                             <i class='fas fa-list'></i> Food List
                         </a>
                     </li>
-                    <li class='nav-item dropdown'>
-                        <a class='nav-link dropdown-toggle' data-bs-toggle='dropdown' href='#' role='button'
-                            aria-haspopup='true' aria-expanded='false'>
-                            <i class='fas fa-pizza-slice'></i> Food Categories
-                        </a>
-                        <div class='dropdown-menu'>
-                            {% for category in categories %}
-                            <a class='dropdown-item' href="{% url 'category_details_view' category.category_name %}">
-                                {{ category }} &nbsp;
-                                <span class='badge bg-primary'>
-                                    {{ category.count_food_by_category }}
-                                </span>
-                            </a>
-                            {% endfor %}
-                        </div>
-                    </li>
+
                     <!-- <li class='nav-item'>
                         <a class='nav-link' href="{% url 'food_add' %}">
                             <i class='far fa-plus-square'></i> Add Food Item
@@ -71,6 +56,11 @@
                     </li>
                     {% endif %}
                     {% if user.role == 'ADMIN' %}
+                    <li class='nav-item'>
+                        <a class='nav-link' href="{% url 'categories' %}">
+                            <i class="fas fa-list"></i> Gérer les catégories
+                        </a>
+                    </li>
                     <li class='nav-item'>
                         <a class='nav-link' href="{% url 'aliments' %}">
                             <i class="fas fa-apple-alt"></i> Gérer les aliments

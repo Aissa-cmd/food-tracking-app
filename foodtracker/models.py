@@ -1,4 +1,3 @@
-from typing import Iterable, Optional
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -6,6 +5,16 @@ from django.db import models
 class GenderOptions(models.TextChoices):
     MALE = ('MALE', 'Male')
     FEMALE = ('FEMALE', 'Female')
+
+
+class AlimentCategory(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'alimentcategories'
 
 
 class User(AbstractUser):
@@ -52,6 +61,7 @@ class Entraineur(models.Model):
 class Aliment(models.Model):
     image = models.ImageField(upload_to='images/')
     name = models.CharField(max_length=255)
+    category = models.ForeignKey(AlimentCategory, null=True, on_delete=models.SET_NULL, related_name='aliments')
     # le poids en gramme
     weight_g = models.DecimalField(max_digits=8, decimal_places=2)
     # Valeur  énergétique (kcal/g)

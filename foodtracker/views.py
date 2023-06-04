@@ -18,6 +18,7 @@ from .models import (
     Entraineur,
     Triathlete,
     Aliment,
+    AlimentCategory,
 )
 from .forms import (
     FoodForm,
@@ -27,6 +28,7 @@ from .forms import (
     TriathleteForm,
     TriathleteEditForm,
     AlimentForm,
+    AlimentCategoryForm,
 )
 
 
@@ -233,8 +235,87 @@ def athlete_delete_view(request, pk):
 
 
 @login_required
+def manage_categories(request):
+    categories = AlimentCategory.objects.all()
+    return render(request, 'manage_categories.html', {
+        'categories': categories,
+    })
+
+
+@login_required
+def category_add_view(request):
+    if request.method == 'POST':
+        print('executed')
+        category_form = AlimentCategoryForm(request.POST)
+        if category_form.is_valid():
+            name = category_form.cleaned_data['name']
+            # create aliment category
+            AlimentCategory.objects.create(name=name)
+            messages.success(request, f"La catégorie '{name}' a été créé avec succès")
+            return redirect(reverse('categories'))
+        else:
+            print('data is not valid', category_form.errors)
+            return render(request, 'category_add.html', {
+                'form': category_form,
+            })
+    return render(request, 'category_add.html', {
+        'form': AlimentCategoryForm(),
+    })
+
+
+@login_required
+def category_edit_view(request, pk):
+    try:
+        category = AlimentCategory.objects.get(pk=pk)
+        if request.method == 'POST':
+            form = AlimentCategoryForm(request.POST)
+            if form.is_valid():
+                category.name = form.cleaned_data.get('name', category.name)
+                category.save()
+                messages.success(request, "Les informations de la catégorie ont été mises à jour avec succès")
+                return redirect(reverse('categories'))
+            else:
+                return render(request, 'category_edit.html', {
+                    'category': category,
+                    'form': form,
+                })
+        else:
+            form = AlimentCategoryForm({'name': category.name})
+            return render(request, 'category_edit.html', {
+                'category': category,
+                'form': form,
+            })
+    except AlimentCategory.DoesNotExist:
+        messages.error(request, "La catégorie n'existe pas")
+        return redirect(reverse('categories'))
+
+
+@login_required
+def category_delete_view(request, pk):
+    try:
+        category = AlimentCategory.objects.get(pk=pk)
+        if request.method == 'POST':
+            deleted, _ = category.delete()
+            if deleted:
+                messages.success(request, f"La catégorie '{category.name}' a été supprimé avec succès")
+                return redirect(reverse('categories'))
+        else:
+            return render(request, 'delete_confirmation.html', {
+                'title': "Supprimer La catégorie",
+                'message': "Êtes-vous sûr de vouloir supprimer cette catégorie?",
+                'cancell_url': "categories"
+            })
+    except AlimentCategory.DoesNotExist:
+        messages.error(request, "La catégorie n'existe pas")
+        return redirect(reverse('categories'))
+
+
+@login_required
 def manage_aliments(request):
-    return render(request, 'manage_food.html')
+    aliments = Aliment.objects.all()
+    return render(request, 'manage_food.html', {
+        'aliments': aliments,
+    })
 
 
 @login_required
@@ -243,6 +324,7 @@ def aliment_add_view(request):
         aliment_form = AlimentForm(request.POST, request.FILES)
         if aliment_form.is_valid():
             image = aliment_form.cleaned_data['image']
+            category = aliment_form.cleaned_data['category']
             name = aliment_form.cleaned_data['name']
             weight_g = aliment_form.cleaned_data['weight_g']
             energy_value = aliment_form.cleaned_data['energy_value']
@@ -251,6 +333,7 @@ def aliment_add_view(request):
             new_aliment = Aliment.objects.create(
                 image=image,
                 name=name,
+                category=category,
                 weight_g=weight_g,
                 energy_value=energy_value,
                 # total_energy_value=total_energy_value,

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Food, Image
+from .models import Food, Image, AlimentCategory
 
 
 class FoodForm(forms.ModelForm):
@@ -103,6 +103,7 @@ class TriathleteEditForm(forms.Form):
 class AlimentForm(forms.Form):
     image = forms.ImageField(label='Image')
     name = forms.CharField(label='Nom')
+    category = forms.ModelChoiceField(label='Catégorie', queryset=AlimentCategory.objects.all())
     weight_g = forms.DecimalField(label='Le poids en gramme')
     energy_value = forms.DecimalField(label='Valeur énergétique (kcal/g)')
     total_energy_value = forms.DecimalField(label='Valeur énergétique totale (kcal)', disabled=True, required=False)
@@ -112,3 +113,12 @@ class AlimentForm(forms.Form):
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+
+class AlimentCategoryForm(forms.Form):
+    name = forms.CharField(label='Nom')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'    
