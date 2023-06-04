@@ -313,8 +313,19 @@ def category_delete_view(request, pk):
 @login_required
 def manage_aliments(request):
     aliments = Aliment.objects.all()
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(aliments, 4)
+    try:
+        pages = paginator.page(page)
+    except PageNotAnInteger:
+        pages = paginator.page(1)
+    except EmptyPage:
+        pages = paginator.page(paginator.num_pages)
+
     return render(request, 'manage_food.html', {
         'aliments': aliments,
+        'pages': pages
     })
 
 
@@ -328,7 +339,6 @@ def aliment_add_view(request):
             name = aliment_form.cleaned_data['name']
             weight_g = aliment_form.cleaned_data['weight_g']
             energy_value = aliment_form.cleaned_data['energy_value']
-            # total_energy_value = aliment_form.cleaned_data['total_energy_value']
             # create aliment
             new_aliment = Aliment.objects.create(
                 image=image,
@@ -336,7 +346,6 @@ def aliment_add_view(request):
                 category=category,
                 weight_g=weight_g,
                 energy_value=energy_value,
-                # total_energy_value=total_energy_value,
             )
             new_aliment.save()
             messages.success(request, f"L' aliment a été créé avec succès")
@@ -348,6 +357,57 @@ def aliment_add_view(request):
     return render(request, 'aliment_add.html', {
         'form': AlimentForm(),
     })
+
+
+@login_required
+def aliment_edit_view(request, pk):
+    try:
+        aliment = Aliment.objects.get(pk=pk)
+        if request.method == 'POST':
+            form = AlimentForm(request.POST, request.FILES)
+            if form.is_valid():
+                ...
+            else:
+                return render(request, 'aliment_edit.html', {
+                    'aliment': aliment,
+                    'form': form,
+                })
+        else:
+            form = AlimentForm({
+                'image': aliment.image,
+                'name': aliment.name,
+                'category': aliment.category,
+                'weight_g': aliment.weight_g,
+                'energy_value': aliment.energy_value,
+                'total_energy_value': aliment.weight_g * aliment.energy_value,
+            })
+            return render(request, 'aliment_edit.html', {
+                'aliment': aliment,
+                'form': form,
+            })
+    except Aliment.DoesNotExist:
+        messages.error(request, "L'aliment n'existe pas")
+        return redirect(reverse('aliments'))
+
+
+@login_required
+def aliment_delete_views(request, pk):
+    try:
+        aliment = Aliment.objects.get(pk=pk)
+        if request.method == 'POST':
+            deleted, _ = aliment.delete()
+            if deleted:
+                messages.success(request, f"L'aliment '{aliment.name}' a été supprimé avec succès")
+                return redirect(reverse('aliments'))
+        else:
+            return render(request, 'delete_confirmation.html', {
+                'title': "Supprimer L'aliment",
+                'message': "Êtes-vous sûr de vouloir supprimer cet aliment?",
+                'cancell_url': "aliments"
+            })
+    except Aliment.DoesNotExist:
+        messages.error(request, "L'aliment n'existe pas")
+        return redirect(reverse('aliments'))
 
 
 def register(request):
