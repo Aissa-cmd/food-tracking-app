@@ -27,7 +27,7 @@
                     <div class='card-body'>
 
                         <div class='form-group'>
-                            <form action="{% url 'trainer_edit' pk=user.id %}" method='POST'>
+                            <form action="{% url 'trainer_edit' pk=trainer.id %}" method='POST'>
                                 {% csrf_token %}
                                 <div class='form-group'>
                                     <!-- {{ form.as_p }} -->

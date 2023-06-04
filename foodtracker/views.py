@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
@@ -29,6 +29,7 @@ from .forms import (
     TriathleteEditForm,
     AlimentForm,
     AlimentCategoryForm,
+    TriathleteCompleteSetupForm,
 )
 
 
@@ -45,6 +46,16 @@ def profile(request):
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
+
+
+@login_required
+def profile(request):
+    if request.user.role == User.UserRoles.ADMIN:
+        return render(request, 'admin_profile.html')
+    elif request.user.role == User.UserRoles.TRIATHLETE:
+        return render(request, 'athelete_profile.html')
+    else:
+        return HttpResponse('profile')
 
 
 @login_required
@@ -127,7 +138,7 @@ def trainers_edit_view(request, pk):
                 return redirect(reverse('entraineurs'))
             else:
                 return render(request, 'trainer_edit.html', {
-                    'user': user,
+                    'trainer': user,
                     'form': form
                 })
         else:
@@ -138,7 +149,7 @@ def trainers_edit_view(request, pk):
                 'phone_number': user.profile_entraineur.phone_number,
             })
             return render(request, 'trainer_edit.html', {
-                'user': user,
+                'trainer': user,
                 'form': form
             })
     except User.DoesNotExist:
@@ -150,6 +161,34 @@ def trainers_edit_view(request, pk):
 def manage_athletes(request):
     triathlete = Triathlete.objects.all()
     return render(request, 'manage_athletes.html', {'triathlete': triathlete})
+
+
+@login_required
+def athelete_profile_setup(request):
+    if request.method == 'POST':
+        user = request.user
+        form = TriathleteCompleteSetupForm(request.POST)
+        if form.is_valid():
+            user.email = form.cleaned_data.get('email', None)
+            user.profile_triathlete.gender = form.cleaned_data['gender']
+            user.profile_triathlete.date_of_birth = form.cleaned_data['date_of_birth']
+            user.profile_triathlete.address = form.cleaned_data.get('address', None)
+            user.profile_triathlete.phone_number = form.cleaned_data.get('phone_number', None)
+            user.profile_triathlete.weight = form.cleaned_data['weight']
+            user.profile_triathlete.height = form.cleaned_data['height']
+            user.profile_triathlete.complete_profile_setup = True
+            user.complete_profile_setup.save()
+            user.save()
+            messages.success(request, "Votre profil a été configuré avec succès")
+            return redirect(reverse('dashboard'))
+        else:
+            return render(request, 'athlete_profile_setup.html', {
+                'form': form,
+            })
+    else:
+        return render(request, 'athlete_profile_setup.html', {
+            'form': TriathleteCompleteSetupForm(),
+        })
 
 
 @login_required
@@ -197,7 +236,7 @@ def athlete_edit_view(request, pk):
                 return redirect(reverse('triathletes'))
             else:
                 return render(request, 'athelete_edit.html', {
-                    'user': user,
+                    'athlete': user,
                     'form': form,
                 })
         else:
@@ -206,7 +245,7 @@ def athlete_edit_view(request, pk):
                 'last_name': user.last_name,
             })
             return render(request, 'athelete_edit.html', {
-                'user': user,
+                'athlete': user,
                 'form': form,
             })
     except User.DoesNotExist:
@@ -434,7 +473,7 @@ def register(request):
                 'categories': FoodCategory.objects.all()
             })
         login(request, user)
-        return HttpResponseRedirect(reverse('index'))
+        return redirect(reverse('index'))
     else:
         return render(request, 'register.html', {
             'categories': FoodCategory.objects.all()
@@ -443,24 +482,24 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
-
         # Attempt to sign user in
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-
         # Check if authentication successful
         if user is not None:
             login(request, user)
             if user.role == User.UserRoles.ADMIN:
                 # user is admin
-                return HttpResponseRedirect(reverse('dashboard'))
+                return redirect(reverse('dashboard'))
             elif user.role == User.UserRoles.ENTRAINEUR:
                 # user is entraineur
-                return HttpResponseRedirect(reverse('dashboard'))
+                return redirect(reverse('dashboard'))
             else:
                 # user is traithlete
-                return HttpResponseRedirect(reverse('dashboard'))
+                if not user.profile_triathlete.complete_profile_setup:
+                    return redirect(reverse('athlete-profile-setup'))
+                return redirect(reverse('dashboard'))
         else:
             return render(request, 'login.html', {
                 'message': "Nom d'utilisateur et / ou mot de passe incorrect.",
@@ -474,7 +513,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse('index'))
+    return redirect(reverse('index'))
 
 
 def food_list_view(request):
@@ -510,7 +549,7 @@ def food_details_view(request, food_id):
     It renders a page that displays the details of a selected food item
     '''
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
+        return redirect(reverse('login'))
 
     food = Food.objects.get(id=food_id)
 
@@ -675,7 +714,7 @@ def category_details_view(request, category_name):
     Food items are paginated: 4 per page
     '''
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
+        return redirect(reverse('login'))
 
     category = FoodCategory.objects.get(category_name=category_name)
     foods = Food.objects.filter(category=category)

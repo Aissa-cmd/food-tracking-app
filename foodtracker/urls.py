@@ -11,6 +11,8 @@ urlpatterns = [
     path('profile/weight', views.weight_log_view, name='weight_log'),
     path('profile/weight/delete/<int:weight_id>', views.weight_log_delete, name='weight_log_delete'),
 
+    path('profile', views.profile, name='profile'),
+
     path('food/list', views.food_list_view, name='food_list'),
     path('food/add', views.food_add_view, name='food_add'),
     path('food/foodlog', views.food_log_view, name='food_log'),
@@ -26,6 +28,7 @@ urlpatterns = [
     path('entraineurs/delete/<int:pk>', views.trainers_delete_view, name='trainer_delete'),
 
     path('triathletes', views.manage_athletes, name='triathletes'),
+    path('triathletes/profile-setup', views.athelete_profile_setup, name='athlete-profile-setup'),
     path('triathletes/add', views.athlete_add_view, name='athlete_add'),
     path('triathletes/edit/<int:pk>', views.athlete_edit_view, name="athlete_edit"),
     path('triathletes/delete/<int:pk>', views.athlete_delete_view, name="athlete_delete"),

@@ -1,6 +1,10 @@
 from django import forms
-
-from .models import Food, Image, AlimentCategory
+from .models import (
+    Food,
+    Image,
+    AlimentCategory,
+    GenderOptions,
+)
 
 
 class FoodForm(forms.ModelForm):
@@ -89,6 +93,22 @@ class TriathleteForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError({'password2': 'Les deux mots de passe ne correspondent pas'})
         return cleaned_data
+
+
+class TriathleteCompleteSetupForm(forms.Form):
+    email = forms.EmailField(label='E-mail', required=False)
+    date_of_birth = forms.DateField(label='Date de naissance', widget=forms.DateInput(attrs={'type': 'date'}))
+    gender = forms.ChoiceField(label='Sexe', choices=GenderOptions.choices)
+    address = forms.CharField(label='Adresse', required=False, widget=forms.Textarea(attrs={'rows': 3}))
+    phone_number = forms.CharField(label='Numéro de téléphone', required=False)
+    weight = forms.DecimalField(label='Poids (g)')
+    height = forms.DecimalField(label='Hauteur (cm)')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
     
 class TriathleteEditForm(forms.Form):
     first_name = forms.CharField(label='Nom')
