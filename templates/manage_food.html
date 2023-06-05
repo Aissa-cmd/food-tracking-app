@@ -29,12 +29,16 @@
 
       {% for food in pages %}
       <div class='col-sm-12 col-md-12 col-lg-4 col-xl-3 d-flex align-items-stretch'>
-        <div class='card bg-secondary mb-3'>
+        <div class='card bg-secondary mb-3' style="overflow: hidden;">
 
-          <a href='#'>
+          <!-- <a href='#'>
             <img src="{{ food.image.url|default:'../../static/images/no_image.png' }}" class='img-fluid'
               alt='food image'>
-          </a>
+          </a> -->
+
+          <div
+            style="width: 100%;height: 200px;background-color: white;background-image: url('{{ food.image.url|default:'../../static/images/no_image.png' }}');background-size: cover;">
+          </div>
 
           <div class='card-body'>
             <h4 class='card-title'>
@@ -53,13 +57,13 @@
             </div>
             </p>
 
-            <!-- <p class='card-text'>
+            <p class='card-text'>
             <div class='my-3'>
-              <a href="{% url 'food_details' food.id %}" type='button' class='btn btn-link'>
+              <a href="{% url 'aliment_detail' food.id %}" type='button' class='btn btn-link'>
                 View details
               </a>
             </div>
-            </p> -->
+            </p>
 
             <div class="d-flex flex-align-center">
               <a href="{% url 'aliment_edit' pk=food.id %}" class="btn btn-primary flex-fill">

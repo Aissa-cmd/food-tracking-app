@@ -369,6 +369,16 @@ def manage_aliments(request):
 
 
 @login_required
+def aliment_detail_view(request, pk):
+    try:
+        aliment = Aliment.objects.get(pk=pk)
+        return render(request, 'aliment_detail.html', {'food': aliment})
+    except Aliment.DoesNotExist:
+        messages.error(request, "L'aliment n'existe pas")
+        return redirect(reverse('aliments'))
+
+
+@login_required
 def aliment_add_view(request):
     if request.method == 'POST':
         aliment_form = AlimentForm(request.POST, request.FILES)

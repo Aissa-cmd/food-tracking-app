@@ -36,6 +36,12 @@ class User(AbstractUser):
 
 
 class Triathlete(models.Model):
+    class PhysicalActivityLevel(models.TextChoices):
+        LESS_1H_WEEK  = ('LESS_1H_WEEK', "<1h d'exercice par semaine")
+        ONEH_3H_WEEK  = ('ONEH_3H_WEEK', "1h à 3h d'exercise par semaine")
+        FOURH_6H_WEEK = ('FOURH_6H_WEEK', "4h à 6h d'exercise par semaine")
+        GREAT_6H_WEEK = ('GREAT_6H_WEEK', ">6h d'exercice par semaine")
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile_triathlete')
     gender = models.CharField(max_length=10, choices=GenderOptions.choices, null=True)
     date_of_birth = models.DateField(null=True)
@@ -45,6 +51,12 @@ class Triathlete(models.Model):
     height = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     daily_calories = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     complete_profile_setup = models.BooleanField(default=False)
+    masse_masculaire = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    imc = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    mass_grasse = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    niveau_activite = models.CharField(max_length=15, choices=PhysicalActivityLevel.choices)
+    metabolisme_de_base = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    depense_energetique_journaliere = models.DecimalField(max_digits=8, decimal_places=2, null=True)
 
     class Meta:
         db_table = 'triathletes'
@@ -68,6 +80,9 @@ class Aliment(models.Model):
     energy_value = models.DecimalField(max_digits=8, decimal_places=2)
     # Valeur énergétique totale (kcal)
     total_energy_value = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    protein =  models.DecimalField(max_digits=7, decimal_places=2)
+    carboheidrates = models.DecimalField(max_digits=7, decimal_places=2)
+    fat = models.DecimalField(max_digits=7, decimal_places=2)
 
     def save(self, *args, **kwargs):
         self.total_energy_value = self.weight_g * self.energy_value

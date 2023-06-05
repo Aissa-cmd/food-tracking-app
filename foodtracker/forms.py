@@ -2,6 +2,7 @@ from django import forms
 from .models import (
     Food,
     Image,
+    Triathlete,
     AlimentCategory,
     GenderOptions,
 )
@@ -101,6 +102,7 @@ class TriathleteCompleteSetupForm(forms.Form):
     gender = forms.ChoiceField(label='Sexe', choices=GenderOptions.choices)
     address = forms.CharField(label='Adresse', required=False, widget=forms.Textarea(attrs={'rows': 3}))
     phone_number = forms.CharField(label='Numéro de téléphone', required=False)
+    niveau_activite = forms.ChoiceField(label="Niveau d'ctivité physique", choices=Triathlete.PhysicalActivityLevel.choices)
     weight = forms.DecimalField(label='Poids (g)')
     height = forms.DecimalField(label='Hauteur (cm)')
 
@@ -127,7 +129,9 @@ class AlimentForm(forms.Form):
     weight_g = forms.DecimalField(label='Le poids en gramme')
     energy_value = forms.DecimalField(label='Valeur énergétique (kcal/g)')
     total_energy_value = forms.DecimalField(label='Valeur énergétique totale (kcal)', disabled=True, required=False)
-
+    protein =  forms.DecimalField(label="Protein")
+    carboheidrates = forms.DecimalField(label="Carboheidrates")
+    fat = forms.DecimalField(label="Fat")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

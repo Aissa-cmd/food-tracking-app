@@ -39,6 +39,7 @@ urlpatterns = [
     path('categories/delete/<int:pk>', views.category_delete_view, name='category_delete'),
 
     path('aliments', views.manage_aliments, name='aliments'),
+    path('aliments/<int:pk>', views.aliment_detail_view, name='aliment_detail'),
     path('aliments/add', views.aliment_add_view, name='aliement_add'),
     path('aliments/edit/<int:pk>', views.aliment_edit_view, name='aliment_edit'),
     path('aliments/delete/<int:pk>', views.aliment_delete_views, name='aliment_delete'),
