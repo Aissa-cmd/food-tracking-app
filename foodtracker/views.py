@@ -1,4 +1,6 @@
 from django import forms
+import math
+import builtins
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -7,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-
+from .utils import calculate_age
 from .models import (
     User,
     Food,
@@ -19,6 +21,7 @@ from .models import (
     Triathlete,
     Aliment,
     AlimentCategory,
+    GenderOptions,
 )
 from .forms import (
     FoodForm,
@@ -169,15 +172,42 @@ def athelete_profile_setup(request):
         user = request.user
         form = TriathleteCompleteSetupForm(request.POST)
         if form.is_valid():
+            age = calculate_age(form.cleaned_data['date_of_birth'])
             user.email = form.cleaned_data.get('email', None)
             user.profile_triathlete.gender = form.cleaned_data['gender']
             user.profile_triathlete.date_of_birth = form.cleaned_data['date_of_birth']
+            user.profile_triathlete.age = age
             user.profile_triathlete.address = form.cleaned_data.get('address', None)
             user.profile_triathlete.phone_number = form.cleaned_data.get('phone_number', None)
             user.profile_triathlete.weight = form.cleaned_data['weight']
             user.profile_triathlete.height = form.cleaned_data['height']
             user.profile_triathlete.complete_profile_setup = True
-            user.complete_profile_setup.save()
+            height_in_m = builtins.round(float(form.cleaned_data['height']) * math.pow(10, -2), 2)
+            # Masse musculaire (%)
+            if form.cleaned_data['gender'] == GenderOptions.MALE:
+                user.profile_triathlete.masse_masculaire = builtins.round(0.407 * float(form.cleaned_data['weight']) + 0.267 * float(form.cleaned_data['height']) - 19.2, 2)
+            else:
+                user.profile_triathlete.masse_masculaire = builtins.round(0.252 * float(form.cleaned_data['weight']) + 0.473 * float(form.cleaned_data['height']) - 48.3, 2)
+            # IMC (Kg/m^2)
+            user.profile_triathlete.imc = builtins.round(float(form.cleaned_data['weight']) / math.pow(height_in_m, height_in_m), 2)
+            # Masse Grasse (%)
+            if form.cleaned_data['gender'] == GenderOptions.MALE:
+                user.profile_triathlete.mass_grasse = builtins.round(1.2 * user.profile_triathlete.imc + 0.23 * age - 10.8 * 1 - 5.4, 2)
+            else:
+                user.profile_triathlete.mass_grasse = builtins.round(1.2 * user.profile_triathlete.imc + 0.23 * age - 10.8 * 0 - 5.4, 2)
+            # Niveau d'ctivité physique
+            user.profile_triathlete.niveau_activite = form.cleaned_data['niveau_activite']
+            # Métabolisme de base(Kcal)
+            if form.cleaned_data['gender'] == GenderOptions.MALE:
+                user.profile_triathlete.metabolisme_de_base = builtins.round(13.707 * float(form.cleaned_data['weight']) + 492.3 * height_in_m - 6.673 * age + 77.607, 0)
+            else:
+                user.profile_triathlete.metabolisme_de_base = builtins.round(9.74 * float(form.cleaned_data['weight']) + 172.9 * height_in_m - 4.737 * age + 667.051, 0)
+            # Dépense énergétique journalière(Kcal)
+            if form.cleaned_data['niveau_activite'] == Triathlete.PhysicalActivityLevel.TWELVE_15H_WEEK:
+                user.profile_triathlete.depense_energetique_journaliere = builtins.round(user.profile_triathlete.metabolisme_de_base * 1.8, 0)
+            else:
+                user.profile_triathlete.depense_energetique_journaliere = builtins.round(user.profile_triathlete.metabolisme_de_base * 2, 0)
+            user.profile_triathlete.save()
             user.save()
             messages.success(request, "Votre profil a été configuré avec succès")
             return redirect(reverse('dashboard'))

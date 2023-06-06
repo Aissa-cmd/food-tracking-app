@@ -55,7 +55,7 @@ class EntraineurForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError({'password2': 'Les deux mots de passe ne correspondent pas'})
         return cleaned_data
-    
+
 
 class EntraineurEditForm(forms.Form):
     first_name = forms.CharField(label='Nom')
@@ -103,7 +103,7 @@ class TriathleteCompleteSetupForm(forms.Form):
     address = forms.CharField(label='Adresse', required=False, widget=forms.Textarea(attrs={'rows': 3}))
     phone_number = forms.CharField(label='Numéro de téléphone', required=False)
     niveau_activite = forms.ChoiceField(label="Niveau d'ctivité physique", choices=Triathlete.PhysicalActivityLevel.choices)
-    weight = forms.DecimalField(label='Poids (g)')
+    weight = forms.DecimalField(label='Poids (kg)')
     height = forms.DecimalField(label='Hauteur (cm)')
 
     def __init__(self, *args, **kwargs):
@@ -111,7 +111,7 @@ class TriathleteCompleteSetupForm(forms.Form):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
-    
+
 class TriathleteEditForm(forms.Form):
     first_name = forms.CharField(label='Nom')
     last_name = forms.CharField(label='Prénom')
