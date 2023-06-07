@@ -59,6 +59,8 @@ class Triathlete(models.Model):
     niveau_activite = models.CharField(max_length=15, choices=PhysicalActivityLevel.choices)
     metabolisme_de_base = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     depense_energetique_journaliere = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    # daily_water_consumption in ml
+    daily_water_consumption = models.DecimalField(max_digits=8, decimal_places=2, null=True)
 
     class Meta:
         db_table = 'triathletes'

@@ -207,6 +207,7 @@ def athelete_profile_setup(request):
                 user.profile_triathlete.depense_energetique_journaliere = builtins.round(user.profile_triathlete.metabolisme_de_base * 1.8, 0)
             else:
                 user.profile_triathlete.depense_energetique_journaliere = builtins.round(user.profile_triathlete.metabolisme_de_base * 2, 0)
+            user.profile_triathlete.daily_water_consumption =  user.profile_triathlete.depense_energetique_journaliere
             user.profile_triathlete.save()
             user.save()
             messages.success(request, "Votre profil a été configuré avec succès")
