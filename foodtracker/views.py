@@ -1,4 +1,6 @@
 from django import forms
+from django.utils import timezone
+from itertools import groupby
 import math
 import builtins
 from django.contrib.auth import authenticate, login, logout
@@ -22,6 +24,8 @@ from .models import (
     Aliment,
     AlimentCategory,
     GenderOptions,
+    DailyFood,
+    DailyFoodDetails,
 )
 from .forms import (
     FoodForm,
@@ -42,13 +46,88 @@ def index(request):
     '''
     return food_list_view(request)
 
+
 @login_required
 def profile(request):
     pass
 
+
 @login_required
 def dashboard(request):
+    if request.user.role == User.UserRoles.TRIATHLETE:
+        try:
+            daily_food = DailyFood.objects.get(date=timezone.localdate(), athlete_id=request.user.id)
+            breakfast = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id, day_section=DailyFoodDetails.DaySection.BREAKFAST)
+            lunch = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id, day_section=DailyFoodDetails.DaySection.LUNCH)
+            dinner = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id, day_section=DailyFoodDetails.DaySection.DINNER)
+        except DailyFood.DoesNotExist:
+            daily_food = DailyFood.objects.create(athlete=request.user)
+            breakfast = []
+            lunch = []
+            dinner = []
+        return render(request, 'athelete_dashboard.html', {
+            'breakfast': breakfast,
+            'lunch': lunch,
+            'dinner': dinner,
+        })
     return render(request, 'dashboard.html')
+
+
+@login_required
+def add_daily_food(request, section):
+    aliments = Aliment.objects.all()
+    return render(request, 'add_daily_food.html', {
+        'aliments': aliments,
+        'section': section,
+    })
+
+
+@login_required
+def add_daily_food_config(request, section, aliment_id):
+    aliment = Aliment.objects.get(pk=aliment_id)
+    if request.method == 'POST':
+        weight_g = float(request.POST['quantity'])
+        total_energy_value = weight_g * float(aliment.energy_value)
+        protein = weight_g * (float(aliment.protein) / float(aliment.weight_g))
+        carboheidrates = weight_g * (float(aliment.carboheidrates) / float(aliment.weight_g))
+        fat = weight_g * (float(aliment.fat) / float(aliment.weight_g))
+        daily_food = DailyFood.objects.get(date=timezone.localdate(), athlete_id=request.user.id)
+        DailyFoodDetails.objects.create(
+            detail_food=daily_food,
+            aliment=aliment,
+            day_section=section,
+            weight_g=weight_g,
+            energy_value=aliment.energy_value,
+            total_energy_value=total_energy_value,
+            protein=protein,
+            carboheidrates=carboheidrates, 
+            fat=fat, 
+        )
+        return redirect(reverse('dashboard'))
+    return render(request, 'add_daily_food_config.html', {
+        'aliment': aliment,
+        'day_section': section,
+    })
+
+
+@login_required
+def delete_daily_food(request, pk):
+    try:
+        user = DailyFoodDetails.objects.get(pk=pk)
+        if request.method == 'POST':
+            deleted, _ = user.delete()
+            if deleted:
+                messages.success(request, f"L'aliment a été supprimé avec succès")
+                return redirect(reverse('dashboard'))
+        else:
+            return render(request, 'delete_confirmation.html', {
+                'title': "Supprimer l'aliment",
+                'message': "Êtes-vous sûr de vouloir supprimer cet aliment?",
+                'cancell_url': "dashboard"
+            })
+    except DailyFoodDetails.DoesNotExist:
+        messages.error(request, "L'aliment n'existe pas")
+        return redirect(reverse('entraineurs'))
 
 
 @login_required

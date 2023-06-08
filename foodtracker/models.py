@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 
 class GenderOptions(models.TextChoices):
@@ -95,6 +96,37 @@ class Aliment(models.Model):
     class Meta:
         db_table = 'aliments'
 
+
+class DailyFood(models.Model):
+    date = models.DateField(default=timezone.now)
+    athlete = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dailyfoods')
+
+    class Meta:
+        db_table = 'dailyfoods'
+
+
+class DailyFoodDetails(models.Model):
+    class DaySection(models.TextChoices):
+        BREAKFAST = ('BREAKFAST', 'Breakfast')
+        LUNCH = ('LUNCH', 'Lunch')
+        DINNER = ('DINNER', 'Dinner')
+
+    detail_food = models.ForeignKey(DailyFood, on_delete=models.CASCADE, related_name='dailyfooddetails')
+    aliment = models.ForeignKey(Aliment, null=True, on_delete=models.CASCADE)
+    day_section = models.CharField(max_length=15, choices=DaySection.choices)
+    weight_g = models.DecimalField(max_digits=8, decimal_places=2)
+    # Valeur  énergétique (kcal/g)
+    energy_value = models.DecimalField(max_digits=8, decimal_places=2)
+    # Valeur énergétique totale (kcal)
+    total_energy_value = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    protein =  models.DecimalField(max_digits=7, decimal_places=2)
+    carboheidrates = models.DecimalField(max_digits=7, decimal_places=2)
+    fat = models.DecimalField(max_digits=7, decimal_places=2)
+
+    class Meta:
+        db_table = 'dailyfooddetails'
+
+# =========================================================================
 
 class FoodCategory(models.Model):
     category_name = models.CharField(max_length=50)
