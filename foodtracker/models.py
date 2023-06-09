@@ -110,6 +110,7 @@ class DailyFoodDetails(models.Model):
         BREAKFAST = ('BREAKFAST', 'Breakfast')
         LUNCH = ('LUNCH', 'Lunch')
         DINNER = ('DINNER', 'Dinner')
+        SNACK = ('SNACK', 'Snack')
 
     detail_food = models.ForeignKey(DailyFood, on_delete=models.CASCADE, related_name='dailyfooddetails')
     aliment = models.ForeignKey(Aliment, null=True, on_delete=models.CASCADE)
@@ -125,6 +126,22 @@ class DailyFoodDetails(models.Model):
 
     class Meta:
         db_table = 'dailyfooddetails'
+
+
+class DailyExerciseDetails(models.Model):
+    class ExerciseType(models.TextChoices):
+        SEMI_SPRINT_XS = ('SEMI_SPRINT_XS', 'Semi-Sprint (XS)')
+        SPRINT_S = ('SPRINT_S', 'Sprint (S)')
+        OLYMPIQUE_M = ('OLYMPIQUE_M', 'Olympique (M)')
+        TRIATHLON_L = ('TRIATHLON_L', 'Triathlon (L)')
+        TRIATHLON_XL = ('TRIATHLON_XL', 'Triathlon (XL)')
+
+    detail_food = models.ForeignKey(DailyFood, on_delete=models.CASCADE, related_name='dailyexercisedetails')
+    exercise_type = models.CharField(max_length=255, choices=ExerciseType.choices)
+    burned_calories = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+
+    class Meta:
+        db_table = 'dailyexercisedetails'
 
 # =========================================================================
 

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}Food Tracker | {{ title }}{% endblock %}
+
+{% block styles %}
+<style>
+  .exercise-container {
+    width: 100%;
+    max-width: 800px;
+    height: 90px;
+    margin-bottom: 1rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+    padding: 20px;
+  }
+
+  .exercise-label {
+    color: #7777ff;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+</style>
+{% endblock styles %}
+
+{% block body %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-4" role="alert">
+  {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="d-flex flex-column align-items-center">
+  <div class="mt-4 mb-4 d-flex align-items-center justify-content-between">
+    <h4>Liste des exercices</h4>
+  </div>
+  <div class="exercise-container d-flex align-items-center justify-content-between">
+    <div class="exercise-label">
+      XS
+    </div>
+    <div class="exercise-overview d-flex flex-column align-items-center">
+      <div>10.3 km à 12.9 km</div>
+      <div>SEMI-SPRINT</div>
+    </div>
+    <div class="exercise-images d-flex flex-column align-items-center">
+      <div><i class="fas fa-swimmer"></i></div>
+      <div><i class="fas fa-bicycle"></i></div>
+      <div><i class="fas fa-running"></i></div>
+    </div>
+    <div class="exercise-text d-flex flex-column align-items-end">
+      <div>300-400 m</div>
+      <div>8-10 km</div>
+      <div>2-2.5 km</div>
+    </div>
+    <div class="exercise-action-btn ">
+      <a href="{% url 'add_daily_exercise_cofig' exercise='SEMI_SPRINT_XS' %}" class="btn btn-primary">
+        <i class='far fa-plus-square'></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-container d-flex align-items-center justify-content-between">
+    <div class="exercise-label">
+      S
+    </div>
+    <div class="exercise-overview d-flex flex-column align-items-center">
+      <div>25.7 km</div>
+      <div>SPRINT</div>
+    </div>
+    <div class="exercise-images d-flex flex-column align-items-center">
+      <div><i class="fas fa-swimmer"></i></div>
+      <div><i class="fas fa-bicycle"></i></div>
+      <div><i class="fas fa-running"></i></div>
+    </div>
+    <div class="exercise-text d-flex flex-column align-items-end">
+      <div>750 m</div>
+      <div>20 km</div>
+      <div>5 km</div>
+    </div>
+    <div class="exercise-action-btn ">
+      <a href="{% url 'add_daily_exercise_cofig' exercise='SPRINT_S' %}" class="btn btn-primary">
+        <i class='far fa-plus-square'></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-container d-flex align-items-center justify-content-between">
+    <div class="exercise-label">
+      M
+    </div>
+    <div class="exercise-overview d-flex flex-column align-items-center">
+      <div>51.5 km</div>
+      <div>OLYMPIQUE</div>
+    </div>
+    <div class="exercise-images d-flex flex-column align-items-center">
+      <div><i class="fas fa-swimmer"></i></div>
+      <div><i class="fas fa-bicycle"></i></div>
+      <div><i class="fas fa-running"></i></div>
+    </div>
+    <div class="exercise-text d-flex flex-column align-items-end">
+      <div>1.5 m</div>
+      <div>40 km</div>
+      <div>10 km</div>
+    </div>
+    <div class="exercise-action-btn ">
+      <a href="{% url 'add_daily_exercise_cofig' exercise='OLYMPIQUE_M' %}" class="btn btn-primary">
+        <i class='far fa-plus-square'></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-container d-flex align-items-center justify-content-between">
+    <div class="exercise-label">
+      L
+    </div>
+    <div class="exercise-overview d-flex flex-column align-items-center">
+      <div>113 km</div>
+      <div>TRIATHLON L</div>
+    </div>
+    <div class="exercise-images d-flex flex-column align-items-center">
+      <div><i class="fas fa-swimmer"></i></div>
+      <div><i class="fas fa-bicycle"></i></div>
+      <div><i class="fas fa-running"></i></div>
+    </div>
+    <div class="exercise-text d-flex flex-column align-items-end">
+      <div>1.9 m</div>
+      <div>90 km</div>
+      <div>21.1 km</div>
+    </div>
+    <div class="exercise-action-btn ">
+      <a href="{% url 'add_daily_exercise_cofig' exercise='TRIATHLON_L' %}" class="btn btn-primary">
+        <i class='far fa-plus-square'></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-container d-flex align-items-center justify-content-between">
+    <div class="exercise-label">
+      XL
+    </div>
+    <div class="exercise-overview d-flex flex-column align-items-center">
+      <div>226 km</div>
+      <div>TRIATHLON XL</div>
+    </div>
+    <div class="exercise-images d-flex flex-column align-items-center">
+      <div><i class="fas fa-swimmer"></i></div>
+      <div><i class="fas fa-bicycle"></i></div>
+      <div><i class="fas fa-running"></i></div>
+    </div>
+    <div class="exercise-text d-flex flex-column align-items-end">
+      <div>3.8 m</div>
+      <div>180.2 km</div>
+      <div>42.195 km</div>
+    </div>
+    <div class="exercise-action-btn ">
+      <a href="{% url 'add_daily_exercise_cofig' exercise='TRIATHLON_XL' %}" class="btn btn-primary">
+        <i class='far fa-plus-square'></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock body %}

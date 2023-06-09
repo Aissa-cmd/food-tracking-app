@@ -26,6 +26,7 @@ from .models import (
     GenderOptions,
     DailyFood,
     DailyFoodDetails,
+    DailyExerciseDetails,
 )
 from .forms import (
     FoodForm,
@@ -57,18 +58,37 @@ def dashboard(request):
     if request.user.role == User.UserRoles.TRIATHLETE:
         try:
             daily_food = DailyFood.objects.get(date=timezone.localdate(), athlete_id=request.user.id)
-            breakfast = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id, day_section=DailyFoodDetails.DaySection.BREAKFAST)
-            lunch = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id, day_section=DailyFoodDetails.DaySection.LUNCH)
-            dinner = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id, day_section=DailyFoodDetails.DaySection.DINNER)
+            daily_food_details = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id)
+            breakfast = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.BREAKFAST)
+            lunch = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.LUNCH)
+            dinner = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.DINNER)
+            snack = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.SNACK)
+            exercises = DailyExerciseDetails.objects.filter(detail_food__id=daily_food.id)
+            goal_count = request.user.profile_triathlete.depense_energetique_journaliere
+            aliments_count = builtins.sum(builtins.map(lambda x: x.total_energy_value, daily_food_details))
+            exercise_count = builtins.sum(builtins.map(lambda x: x.burned_calories, exercises))
+            remaining_count = goal_count - aliments_count + exercise_count
         except DailyFood.DoesNotExist:
             daily_food = DailyFood.objects.create(athlete=request.user)
             breakfast = []
             lunch = []
             dinner = []
+            snack = []
+            exercises = []
+            goal_count = 0
+            aliments_count = 0
+            exercise_count = 0
+            remaining_count = 0
         return render(request, 'athelete_dashboard.html', {
             'breakfast': breakfast,
             'lunch': lunch,
             'dinner': dinner,
+            'snack': snack,
+            'exercises': exercises,
+            'goal_count': goal_count,
+            'aliments_count': aliments_count,
+            'exercise_count': exercise_count,
+            'remaining_count': remaining_count,
         })
     return render(request, 'dashboard.html')
 
@@ -128,6 +148,47 @@ def delete_daily_food(request, pk):
     except DailyFoodDetails.DoesNotExist:
         messages.error(request, "L'aliment n'existe pas")
         return redirect(reverse('entraineurs'))
+
+
+@login_required
+def delete_daily_exercise(request, pk):
+    try:
+        user = DailyExerciseDetails.objects.get(pk=pk)
+        if request.method == 'POST':
+            deleted, _ = user.delete()
+            if deleted:
+                messages.success(request, f"L'exercise a été supprimé avec succès")
+                return redirect(reverse('dashboard'))
+        else:
+            return render(request, 'delete_confirmation.html', {
+                'title': "Supprimer l'exercise",
+                'message': "Êtes-vous sûr de vouloir supprimer cet exercise?",
+                'cancell_url': "dashboard"
+            })
+    except DailyExerciseDetails.DoesNotExist:
+        messages.error(request, "L'execise n'existe pas")
+        return redirect(reverse('entraineurs'))
+
+
+@login_required
+def add_daily_exercise(request):
+    return render(request, 'add_daily_exercise.html')
+
+
+@login_required
+def add_daily_exercise_cofig(request, exercise):
+    if request.method == 'POST':
+        burned_calories = float(request.POST['burned_calories'])
+        daily_food = DailyFood.objects.get(date=timezone.localdate(), athlete_id=request.user.id)
+        DailyExerciseDetails.objects.create(
+            detail_food=daily_food,
+            exercise_type=exercise,
+            burned_calories=burned_calories,
+        )
+        return redirect(reverse('dashboard'))
+    return render(request, 'add_daily_exercise_config.html', {
+        'exercise': exercise,
+    })
 
 
 @login_required
