@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Food Tracker | {{ title }}{% endblock %}
+{% block title %}TriFeul+ | {{ title }}{% endblock %}
 
 {% block body %}
 
@@ -53,20 +53,21 @@
 
             <p class='card-text'>
             <div class='my-3'>
-              Category: {{ food.category }}
+              Catégorie: {{ food.category }}
             </div>
             </p>
 
             <p class='card-text'>
             <div class='my-3'>
-              <strong>{{ food.weight_g }} calories</strong> in {{ food.energy_value|floatformat:0 }} grams
+              <strong>{{ food.weight_g|floatformat:'0' }} calories</strong> in {{ food.energy_value|floatformat:'0' }}
+              grammes
             </div>
             </p>
 
             <p class='card-text'>
             <div class='my-3'>
               <a href="{% url 'aliment_detail' food.id %}" type='button' class='btn btn-link'>
-                View details
+                Voir les détails
               </a>
             </div>
             </p>

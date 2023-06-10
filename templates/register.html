@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Food Tracker | Registration{% endblock %}
+{% block title %}TriFeul+ | Registration{% endblock %}
 
 {% block body %}
 <div class='py-4 mt-auto'>
@@ -11,14 +11,14 @@
         </div>
 
         {% if message %}
-            <div>{{ message }}</div>
+        <div>{{ message }}</div>
         {% endif %}
 
         <div class='row'>
             <div class='col-lg-6 offset-lg-3'>
                 <div class='card bg-secondary mb-3'>
                     <div class='card-body'>
-    
+
                         <div class='form-group'>
 
                             <form action="{% url 'register' %}" method='POST'>
@@ -27,28 +27,32 @@
                                     <label for='inputUsername' class='form-label mt-4'>
                                         Username
                                     </label>
-                                    <input type='text' name='username' class='form-control' id='inputUsername' placeholder='Enter username' autofocus>
+                                    <input type='text' name='username' class='form-control' id='inputUsername'
+                                        placeholder='Enter username' autofocus>
                                 </div>
 
                                 <div class='form-group'>
                                     <label for='inputEmail' class='form-label mt-4'>
                                         Email Address
                                     </label>
-                                    <input type='email' name='email' class='form-control' id='inputEmail' placeholder='Enter email'>
+                                    <input type='email' name='email' class='form-control' id='inputEmail'
+                                        placeholder='Enter email'>
                                 </div>
 
                                 <div class='form-group'>
                                     <label for='inputPassword1' class='form-label mt-4'>
                                         Password
                                     </label>
-                                    <input type='password' name='password' class='form-control' id='inputPassword1' placeholder='Enter password'>
+                                    <input type='password' name='password' class='form-control' id='inputPassword1'
+                                        placeholder='Enter password'>
                                 </div>
 
                                 <div class='form-group'>
                                     <label for='inputPassword2' class='form-label mt-4'>
                                         Confirm Password
                                     </label>
-                                    <input type='password' name='confirmation' class='form-control' id='inputPassword2' placeholder='Confirm password'>
+                                    <input type='password' name='confirmation' class='form-control' id='inputPassword2'
+                                        placeholder='Confirm password'>
                                 </div>
 
                                 <div class='form-group mt-4'>

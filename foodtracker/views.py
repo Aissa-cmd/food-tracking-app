@@ -105,6 +105,8 @@ def dashboard(request):
         return render(request, 'trainer_dashboard.html', {
             'triathlete': triathlete,
         })
+    elif request.user.role == User.UserRoles.ADMIN:
+        return redirect(reverse('triathletes'))
     return render(request, 'dashboard.html')
 
 
