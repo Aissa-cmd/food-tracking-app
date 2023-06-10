@@ -1,97 +1,57 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}TriFeul+ | {{ title }}{% endblock %}
 
-{% block body %}
+{% block styles %}
+<style>
+  .hero_container {
+    height: 448px;
+    background-image: url("{% static 'images/index_hero_image.jpg' %}");
+    margin-bottom: 40px;
+  }
+  .hero_text_container {
+    background-color: rgba(0,0,0,0.4);
+    height: 100%;
+    width: 100%;
+    font-size: 10rem;
+    color: #ffffff;
+  }
+  .section-title-cmnd {
+    font-size: 4rem;
+    color: #3ca1da;
+    font-weight: 600;
+  }
+</style>
+{% endblock %}
 
+{% block superbody %}
 
-<!-- <div class='py-4 mt-auto'>
-    <div class='container px-4'>
-
-        <h3>{{ title }}</h3>
-
-        <div class='row justify-content-center'>
-
-        {% for food in pages %}
-            <div class='col-sm-12 col-md-12 col-lg-4 col-xl-3 d-flex align-items-stretch'>
-                <div class='card bg-secondary mb-3'>
-
-                    <a href='#'>
-                        <img 
-                            src="{{ food.image.image.url|default:'../../static/images/no_image.png' }}" 
-                            class='img-fluid'
-                            alt='food image'
-                        >
-                    </a>
-            
-                    <div class='card-body'>
-                        <h4 class='card-title'>
-                            <strong>{{ food.food_name }}</strong>
-                        </h4>
-
-                        <p class='card-text'>
-                            <div class='my-3'>
-                                Category: {{ food.category }}
-                            </div>
-                        </p>
-
-                        <p class='card-text'>
-                            <div class='my-3'>
-                                <strong>{{ food.calories}} calories</strong> in {{ food.quantity|floatformat:0 }} grams
-                            </div>
-                        </p>
-
-                        <p class='card-text'>
-                            <div class='my-3'>
-                                <a href="{% url 'food_details' food.id %}" type='button' class='btn btn-link'>
-                                    View details
-                                </a>
-                            </div>
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-
-        {% endfor %}
-
-        {% if pages.has_other_pages %}
-            <div class='d-flex justify-content-center'>
-                <ul class='pagination'>
-                    {% if pages.has_previous %}
-                        <li class='page-item'>
-                            <a class='page-link' href='?page={{ pages.previous_page_number }}'>&laquo;</a>
-                        </li>
-                    {% else %}
-                        <li class='page-item disabled'>
-                            <a class='page-link' href='#'>&laquo;</a>
-                        </li>
-                    {% endif %}
-                    {% for i in pages.paginator.page_range %}
-                        {% if pages.number == i %}
-                            <li class='page-item active'>
-                                <a class='page-link' href='#'>{{ i }}</a>
-                            </li>
-                        {% else %}
-                            <li class='page-item'>
-                                <a class='page-link' href='?page={{ i }}'>{{ i }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                    {% if pages.has_next %}
-                        <li class='page-item'>
-                            <a class='page-link' href='?page={{ pages.next_page_number }}'>&raquo;</a>
-                        </li>
-                    {% else %}
-                        <li class='page-item disabled'>
-                            <a class='page-link' href='#'>&raquo;</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endif %}
-
-    </div>
+<div class="hero_container">
+  <div class="d-flex align-items-center justify-content-center hero_text_container">
+    TriFeul+
+  </div>
 </div>
--->
+
+<main class="container">
+  <div class="section-container d-flex align-items-center" style="margin-bottom: 100px;">
+    <div style="margin-right: 90px;">
+      <div class="section-title-cmnd">CMND</div>
+      <div style="text-align: justify;">
+        CMND est un Club Municipal de Natation Dcheira El Jihadia à Agadir sous la Fédération Royale Marocaine de Triathlon, dédiée à la pratique et à la promotion du triathlon. Il rassemble des athlètes de tous niveaux, des débutants aux compétiteurs expérimentés, qui partagent une passion commune pour ce sport multidisciplinaire. Il offre un environnement favorable à l'entraînement et à la compétition, en mettant l'accent sur les trois disciplines du triathlon : la natation, le cyclisme et la course à pied. Il dispose de piscines et d’un espace de cyclisme qui permettent aux membres de s'entraîner dans des conditions optimales.
+      </div>
+    </div>
+    <div>
+      <img src="{% static 'images/cmnd.png' %}" alt="cmnd-logo">
+    </div>
+  </div>
+
+  <div class="section-container d-flex flex-column align-items-center" style="max-width: 600px; margin:0 auto;">
+    <img src="{% static 'images/frmt.jpg' %}" alt="frmt-logo" style="margin-bottom: 30px">
+    <div style="text-align: justify;">
+      La Fédération Royale Marocaine de Triathlon a pour but de développer, de promouvoir et d’encadrer le triathlon au Maroc son Président est Monsieur Mjid AMAHROQ.
+    </div>
+  </div>
+</main>
+
 {% endblock %}

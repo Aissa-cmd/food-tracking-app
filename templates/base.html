@@ -26,7 +26,6 @@
 </head>
 
 <body>
-
     <nav class='navbar navbar-expand-lg navbar-dark bg-primary' style="padding: 5px 10px;">
         <div class='container-fluid'>
             <a class='navbar-brand' href="{% url 'index' %}">
@@ -126,12 +125,14 @@
         </div>
     </nav>
 
+    {% block superbody %}
     <main>
         <div class='container'>
             {% block body %}
             {% endblock %}
         </div>
     </main>
+    {% endblock superbody %}
 
     <footer class='py-4'>
         <div class='d-flex align-items-center justify-content-center'>
