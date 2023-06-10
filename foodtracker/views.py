@@ -733,7 +733,7 @@ def manage_aliments(request):
     aliments = Aliment.objects.all()
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(aliments, 4)
+    paginator = Paginator(aliments, 12)
     try:
         pages = paginator.page(page)
     except PageNotAnInteger:
