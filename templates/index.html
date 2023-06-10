@@ -6,9 +6,10 @@
 {% block styles %}
 <style>
   .hero_container {
-    height: 448px;
-    background-image: url("{% static 'images/index_hero_image.jpg' %}");
+    height: 600px;
+/*    background-image: url("{% static 'images/index_hero_image.jpg' %}");*/
     margin-bottom: 40px;
+    background: linear-gradient(to bottom, #3459e6, lightblue, white);
   }
   .hero_text_container {
     background-color: rgba(0,0,0,0.4);
@@ -22,14 +23,53 @@
     color: #3ca1da;
     font-weight: 600;
   }
+  .login-dialog {
+    width: 900px;
+    height: 400px;
+    background-color: #ffffff;
+    border-bottom-left-radius: 200px;
+    border-top-left-radius: 200px;
+  }
 </style>
 {% endblock %}
 
 {% block superbody %}
 
-<div class="hero_container">
-  <div class="d-flex align-items-center justify-content-center hero_text_container">
+<div class="hero_container d-flex justify-content-between align-items-center p-4">
+  <!-- <div class="d-flex align-items-center justify-content-center hero_text_container">
     TriFeul+
+  </div> -->
+  <div style="font-size: 5rem;color: #ffffff;">
+    Connextion
+  </div>
+  <div>
+    <div class="login-dialog d-flex flex-column align-items-center justify-content-center p-4">
+      <div style="font-size: 2rem;">Connextion</div>
+      <div>
+        <form action="{% url 'login' %}" method='post'>
+        {% csrf_token %}
+        <div class="d-flex">
+          <div class="form-group me-4">
+          <label for='inputUsername' class='form-label mt-4'>
+          Nom d'utilisateur
+          </label>
+          <input type='text' name='username' class='form-control' id='inputUsername' placeholder='Enter username' autofocus>
+        </div>
+        <div class='form-group'>
+          <label for='inputPassword1' class='form-label mt-4'>
+          Mot de passe
+          </label>
+          <input type='password' name='password' class='form-control' id='inputPassword1' placeholder='Enter password'>
+        </div>
+        </div>
+        <div class='form-group mt-4 d-flex justify-content-end' style="width: 100%;">
+                  <button type='submit' class='btn btn-primary'>
+                    Connexion
+                  </button>
+                </div>  
+      </form>
+      </div>
+    </div>
   </div>
 </div>
 
