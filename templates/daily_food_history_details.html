@@ -18,8 +18,6 @@
 <div class='py-4 mt-auto'>
   <div class='container-fluid px-4'>
 
-    <h4>Bonjour, <strong>{{ user.first_name }}</strong>!</h4>
-
     <div class='row justify-content-center'>
       <div class='col-xl-12'>
 
@@ -29,8 +27,8 @@
             <div class='card bg-secondary mb-3'>
 
               <div class='card-header'>
-                <h5>Nourriture consommée aujourd'hui</h5>
-                <h5><strong class='text-primary'>{% now 'D, j F Y' %}</strong></h5>
+                <h5>Nourriture consommée </h5>
+                <h5><strong class='text-primary'>{{ daily_food.date|date:'D, j F Y' }}</strong></h5>
               </div>
               <div class='card-body' style="padding: 0;">
 
@@ -39,9 +37,6 @@
                   <div class="d-flex justify-content-between align-items-center"
                     style="background-color: #e9ecef;padding-left: 1.5rem;padding-right: 1.5rem;padding-top: 0.5rem;padding-bottom: 0.5rem;">
                     <h4>Breakfast</h4>
-                    <a href="{% url 'add_daily_food' section='BREAKFAST' %}" class="btn btn-primary">
-                      <i class='far fa-plus-square'></i>
-                    </a>
                   </div>
                   <div style="padding: 0 1rem 1.5rem 1rem">
                     <table id='foodtable-fb' class='table table-hover'>
@@ -68,9 +63,6 @@
                           <td class='col-md-2'>{{ fb.carboheidrates }}</td>
                           <td class='col-md-2'>{{ fb.protein }}</td>
                           <td>
-                            <a class='btn btn-danger' href="{% url 'delete_daily_food' pk=fb.id %}">
-                              <i class='fas fa-trash-alt'></i>
-                            </a>
                           </td>
                         </tr>
                         {% endfor %}
@@ -85,9 +77,6 @@
                   <div class="d-flex justify-content-between align-items-center"
                     style="background-color: #e9ecef;padding-left: 1.5rem;padding-right: 1.5rem;padding-top: 0.5rem;padding-bottom: 0.5rem;">
                     <h4>Lunch</h4>
-                    <a href="{% url 'add_daily_food' section='LUNCH' %}" class="btn btn-primary">
-                      <i class='far fa-plus-square'></i>
-                    </a>
                   </div>
                   <div style="padding: 0 1rem 1.5rem 1rem">
                     <table id='foodtable-lb' class='table table-hover'>
@@ -114,9 +103,6 @@
                           <td class='col-md-2'>{{ fb.carboheidrates }}</td>
                           <td class='col-md-2'>{{ fb.protein }}</td>
                           <td>
-                            <a class='btn btn-danger' href="{% url 'delete_daily_food' pk=fb.id %}">
-                              <i class='fas fa-trash-alt'></i>
-                            </a>
                           </td>
                         </tr>
                         {% endfor %}
@@ -130,9 +116,6 @@
                   <div class="d-flex justify-content-between align-items-center"
                     style="background-color: #e9ecef;padding-left: 1.5rem;padding-right: 1.5rem;padding-top: 0.5rem;padding-bottom: 0.5rem;">
                     <h4>Dinner</h4>
-                    <a href="{% url 'add_daily_food' section='DINNER' %}" class="btn btn-primary">
-                      <i class='far fa-plus-square'></i>
-                    </a>
                   </div>
                   <div style="padding: 0 1rem 1.5rem 1rem">
                     <table id='foodtable-db' class='table table-hover'>
@@ -159,9 +142,6 @@
                           <td class='col-md-2'>{{ fb.carboheidrates }}</td>
                           <td class='col-md-2'>{{ fb.protein }}</td>
                           <td>
-                            <a class='btn btn-danger' href="{% url 'delete_daily_food' pk=fb.id %}">
-                              <i class='fas fa-trash-alt'></i>
-                            </a>
                           </td>
                         </tr>
                         {% endfor %}
@@ -176,9 +156,6 @@
                   <div class="d-flex justify-content-between align-items-center"
                     style="background-color: #e9ecef;padding-left: 1.5rem;padding-right: 1.5rem;padding-top: 0.5rem;padding-bottom: 0.5rem;">
                     <h4>Snack</h4>
-                    <a href="{% url 'add_daily_food' section='SNACK' %}" class="btn btn-primary">
-                      <i class='far fa-plus-square'></i>
-                    </a>
                   </div>
                   <div style="padding: 0 1rem 1.5rem 1rem">
                     <table id='foodtable-sn' class='table table-hover'>
@@ -205,9 +182,6 @@
                           <td class='col-md-2'>{{ fb.carboheidrates }}</td>
                           <td class='col-md-2'>{{ fb.protein }}</td>
                           <td>
-                            <a class='btn btn-danger' href="{% url 'delete_daily_food' pk=fb.id %}">
-                              <i class='fas fa-trash-alt'></i>
-                            </a>
                           </td>
                         </tr>
                         {% endfor %}
@@ -222,9 +196,6 @@
                   <div class="d-flex justify-content-between align-items-center"
                     style="background-color: #e9ecef;padding-left: 1.5rem;padding-right: 1.5rem;padding-top: 0.5rem;padding-bottom: 0.5rem;">
                     <h4>Exercises</h4>
-                    <a href="{% url 'add_daily_exercise' %}" class="btn btn-primary">
-                      <i class='far fa-plus-square'></i>
-                    </a>
                   </div>
                   <div style="padding: 0 1rem 1.5rem 1rem">
                     <table id='foodtable-ex' class='table table-hover'>
@@ -241,9 +212,6 @@
                           <td class='col-md-2'>{{ ex.get_exercise_type_display }}</td>
                           <td class='col-md-2'>{{ ex.burned_calories }}</td>
                           <td class="d-flex justify-content-end">
-                            <a class='btn btn-danger' href="{% url 'delete_daily_exercise' pk=ex.id %}">
-                              <i class='fas fa-trash-alt'></i>
-                            </a>
                           </td>
                         </tr>
                         {% endfor %}
@@ -318,9 +286,6 @@
               <div class='card-header d-flex justify-content-between align-items-center'>
                 <h5>Objectif eau quotidien - <strong class='text-primary'>
                     <span id="daily_water_goal">{{ daily_water_goal|floatformat:"0" }} </span>ml</strong></h5>
-                <a href="{% url 'add_daily_water' %}" class="btn btn-primary">
-                  <i class='far fa-plus-square'></i>
-                </a>
               </div>
               <div class='card-body justify-content-center'>
                 <div class='progress' style="height: 40px;">

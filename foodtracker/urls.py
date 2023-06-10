@@ -51,4 +51,9 @@ urlpatterns = [
     path('add-daily-exercise', views.add_daily_exercise, name='add_daily_exercise'),
     path('add-daily-exercise/<str:exercise>', views.add_daily_exercise_cofig, name='add_daily_exercise_cofig'),
     path('delete-daily-exercise/<int:pk>', views.delete_daily_exercise, name='delete_daily_exercise'),
+
+    path('add-daily-water', views.add_daily_water, name='add_daily_water'),
+
+    path('daily-food-history', views.daily_food_history, name='daily_food_history'),
+    path('daily-food-history-details/<int:pk>', views.daily_food_history_details, name='daily_food_history_details'),
 ]

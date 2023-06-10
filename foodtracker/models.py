@@ -100,6 +100,10 @@ class Aliment(models.Model):
 class DailyFood(models.Model):
     date = models.DateField(default=timezone.now)
     athlete = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dailyfoods')
+    # daily_water_consumption in ml
+    daily_water_consumption = models.DecimalField(max_digits=8, decimal_places=2)
+    # water_goal in ml
+    water_consumption_count = models.DecimalField(max_digits=8, decimal_places=2, default=0)
 
     class Meta:
         db_table = 'dailyfoods'

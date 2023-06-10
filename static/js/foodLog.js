@@ -195,3 +195,25 @@ $(".progress-bar").animate(
 var interval = setInterval(function () {
   $(".progress-bar").html(caloriePercentage + "%");
 }, 500);
+
+const daily_water_goal = parseFloat(
+  document.getElementById("daily_water_goal").innerHTML
+);
+
+const water_consumption_count = parseFloat(
+  document.getElementById("water_consumption_count").value
+);
+
+const waterPercentage = Math.round(
+  (water_consumption_count / daily_water_goal) * 100
+);
+
+$(".progress-bar-water").animate(
+  {
+    width: waterPercentage + "%",
+  },
+  500
+);
+var intervalwater = setInterval(function () {
+  $(".progress-bar-water").html(waterPercentage + "%");
+}, 500);

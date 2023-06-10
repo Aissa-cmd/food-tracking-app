@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from itertools import groupby
+from django.db.models import Sum
 import math
 import builtins
 from django.contrib.auth import authenticate, login, logout
@@ -68,17 +68,24 @@ def dashboard(request):
             aliments_count = builtins.sum(builtins.map(lambda x: x.total_energy_value, daily_food_details))
             exercise_count = builtins.sum(builtins.map(lambda x: x.burned_calories, exercises))
             remaining_count = goal_count - aliments_count + exercise_count
+            daily_water_goal = daily_food.daily_water_consumption
+            water_consumption_count = daily_food.water_consumption_count
         except DailyFood.DoesNotExist:
-            daily_food = DailyFood.objects.create(athlete=request.user)
+            daily_food = DailyFood.objects.create(
+                athlete=request.user,
+                daily_water_consumption=request.user.profile_triathlete.daily_water_consumption,
+            )
             breakfast = []
             lunch = []
             dinner = []
             snack = []
             exercises = []
-            goal_count = 0
+            goal_count = request.user.profile_triathlete.depense_energetique_journaliere
             aliments_count = 0
             exercise_count = 0
-            remaining_count = 0
+            remaining_count = goal_count - aliments_count + exercise_count
+            daily_water_goal = request.user.profile_triathlete.daily_water_consumption
+            water_consumption_count = 0
         return render(request, 'athelete_dashboard.html', {
             'breakfast': breakfast,
             'lunch': lunch,
@@ -89,8 +96,69 @@ def dashboard(request):
             'aliments_count': aliments_count,
             'exercise_count': exercise_count,
             'remaining_count': remaining_count,
+            'daily_water_goal': daily_water_goal,
+            'water_consumption_count': water_consumption_count,
         })
     return render(request, 'dashboard.html')
+
+
+def get_daily_food_metadata(daily_food, calories_goal):
+    consumed_calories = daily_food.dailyfooddetails.values('detail_food_id').annotate(calories_count=Sum('total_energy_value'))[0]['calories_count']
+    exercices_count = daily_food.dailyexercisedetails.values('detail_food_id').annotate(calories_count=Sum('burned_calories'))[0]['calories_count']
+    consumed_calories = consumed_calories - exercices_count
+    return {
+        "daily_food": daily_food,
+        "id": daily_food.id,
+        "date": daily_food.date,
+        "comsumed_calories": consumed_calories,
+        "calories_count": consumed_calories,
+        "calories_percentage": builtins.round((consumed_calories/calories_goal) * 100, 0),
+        "comsumed_water": daily_food.water_consumption_count,
+        "water_goal": daily_food.daily_water_consumption,
+        "water_percentage": builtins.round((daily_food.water_consumption_count/daily_food.daily_water_consumption)*100, 0),
+    }
+
+
+@login_required
+def daily_food_history(request):
+    calories_goal = request.user.profile_triathlete.depense_energetique_journaliere
+    daily_foods = DailyFood.objects.filter(athlete_id=request.user.id, date__lt=timezone.localdate())
+    daily_foods_meta_date = map(lambda x: get_daily_food_metadata(x, calories_goal), daily_foods)
+    return render(request, 'daily_food_history.html', {
+        'daily_foods_meta_date': daily_foods_meta_date,
+        'calories_goal': calories_goal,
+    })
+
+
+@login_required
+def daily_food_history_details(request, pk):
+    daily_food = DailyFood.objects.get(pk=pk)
+    daily_food_details = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id)
+    breakfast = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.BREAKFAST)
+    lunch = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.LUNCH)
+    dinner = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.DINNER)
+    snack = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.SNACK)
+    exercises = DailyExerciseDetails.objects.filter(detail_food__id=daily_food.id)
+    goal_count = request.user.profile_triathlete.depense_energetique_journaliere
+    aliments_count = builtins.sum(builtins.map(lambda x: x.total_energy_value, daily_food_details))
+    exercise_count = builtins.sum(builtins.map(lambda x: x.burned_calories, exercises))
+    remaining_count = goal_count - aliments_count + exercise_count
+    daily_water_goal = daily_food.daily_water_consumption
+    water_consumption_count = daily_food.water_consumption_count
+    return render(request, 'daily_food_history_details.html', {
+        'daily_food': daily_food,
+        'breakfast': breakfast,
+        'lunch': lunch,
+        'dinner': dinner,
+        'snack': snack,
+        'exercises': exercises,
+        'goal_count': goal_count,
+        'aliments_count': aliments_count,
+        'exercise_count': exercise_count,
+        'remaining_count': remaining_count,
+        'daily_water_goal': daily_water_goal,
+        'water_consumption_count': water_consumption_count,
+    })
 
 
 @login_required
@@ -189,6 +257,16 @@ def add_daily_exercise_cofig(request, exercise):
     return render(request, 'add_daily_exercise_config.html', {
         'exercise': exercise,
     })
+
+
+@login_required
+def add_daily_water(request):
+    if request.method == 'POST':
+        daily_food = DailyFood.objects.get(date=timezone.localdate(), athlete_id=request.user.id)
+        daily_food.water_consumption_count = float(daily_food.water_consumption_count) + float(request.POST['water_consumption_count'])
+        daily_food.save()
+        return redirect(reverse('dashboard'))
+    return render(request, 'add_daily_water.html')
 
 
 @login_required

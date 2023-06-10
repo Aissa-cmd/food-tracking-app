@@ -41,11 +41,11 @@
                 {% block navbar %}
                 <ul class='navbar-nav me-auto'>
                     {% if user.is_authenticated %}
-                    <!-- <li class='nav-item'>
-                        <a class='nav-link' href="{% url 'index' %}">
-                            <i class='fas fa-list'></i> Food List
+                    <li class='nav-item'>
+                        <a class='nav-link' href="{% url 'dashboard' %}">
+                            <i class="fas fa-home"></i> Tableau de bord
                         </a>
-                    </li> -->
+                    </li>
 
                     <!-- <li class='nav-item'>
                         <a class='nav-link' href="{% url 'food_add' %}">
@@ -53,9 +53,14 @@
                         </a>
                     </li> -->
                     {% if user.role == 'TRIATHLETE' %}
-                    <li class='nav-item'>
+                    <!-- <li class='nav-item'>
                         <a class='nav-link' href="{% url 'food_log' %}">
                             <i class='fas fa-utensils'></i> Food Log
+                        </a>
+                    </li> -->
+                    <li class='nav-item'>
+                        <a class='nav-link' href="{% url 'daily_food_history' %}">
+                            <i class="fas fa-history"></i> Historique
                         </a>
                     </li>
                     {% endif %}
