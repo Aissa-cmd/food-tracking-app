@@ -15,11 +15,7 @@
       <th scope="col">Nom d'utilisateur</th>
       <th scope="col">Prénom</th>
       <th scope="col">Nom</th>
-      <th scope="col">E-mail</th>
-      <!-- <th scope="col">Numéro de téléphone</th> -->
       <th scope="col">Sexe</th>
-      <th scope="col">Date de naissance</th>
-      <!-- <th scope="col">adresse</th> -->
       <th scope="col">Poids</th>
       <th scope="col">Hauteur</th>
       <th scope="col">Calories quotidiennes</th>
@@ -31,14 +27,12 @@
     {% for atl in triathlete %}
     <tr>
       <th scope="row">{{ forloop.counter }}</th>
-      <td>{{ atl.user.username }}</td>
+      <td>
+        <a href="{% url 'athlete_profile' pk=atl.user.id %}">{{ atl.user.username }}</a>
+      </td>
       <td>{{ atl.user.last_name }}</td>
       <td>{{ atl.user.first_name }}</td>
-      <td>{{ atl.user.email|default:'-' }}</td>
-      <!-- <td>{{ atl.phone_number|default:'-' }}</td> -->
       <td>{{ atl.gender|default:'-' }}</td>
-      <td>{{ atl.date_of_birth|default:'-' }}</td>
-      <!-- <td>{{ atl.address|default:'-' }}</td> -->
       <td>{{ atl.weight|default:'-' }}</td>
       <td>{{ atl.height|default:'-' }}</td>
       <td>{{ atl.depense_energetique_journaliere|default:'-' }}</td>

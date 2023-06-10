@@ -11,38 +11,40 @@
       <h4 class="mb-4" style="text-align: center;">Profil</h4>
 
       <div class='card bg-secondary mb-3' style="max-width: 600px; margin: 0 auto;">
+        {% if show_hello %}
         <div class='card-header d-flex justify-content-between align-items-center'>
-          <h4>Bonjour, <strong>{{ user.username }}</strong>!</h4>
+          <h4>Bonjour, <strong>{{ profile.username }}</strong>!</h4>
         </div>
+        {% endif %}
         <div class='card-body'>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Nom d'utilisateur: <strong>{{ user.username }}</strong>
+              Nom d'utilisateur: <strong>{{ profile.username }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Nom: <strong>{{ user.first_name }}</strong>
+              Nom: <strong>{{ profile.first_name }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Prénom: <strong>{{ user.last_name }}</strong>
+              Prénom: <strong>{{ profile.last_name }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              E-mail: <strong>{{ user.email|default:'-' }}</strong>
+              E-mail: <strong>{{ profile.email|default:'-' }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Numéro de téléphone: <strong>{{ user.profile_triathlete.phone_number|default:'-' }}</strong>
+              Numéro de téléphone: <strong>{{ profile.profile_triathlete.phone_number|default:'-' }}</strong>
             </p>
           </div>
 

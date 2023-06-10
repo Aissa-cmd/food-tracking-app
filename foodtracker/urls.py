@@ -26,12 +26,14 @@ urlpatterns = [
     path('entraineurs/add', views.trainers_add_view, name='trainer_add'),
     path('entraineurs/edit/<int:pk>', views.trainers_edit_view, name='trainer_edit'),
     path('entraineurs/delete/<int:pk>', views.trainers_delete_view, name='trainer_delete'),
+    path('entraineurs/<int:pk>', views.trainer_profile, name="trainer_profile"),
 
     path('triathletes', views.manage_athletes, name='triathletes'),
     path('triathletes/profile-setup', views.athelete_profile_setup, name='athlete-profile-setup'),
     path('triathletes/add', views.athlete_add_view, name='athlete_add'),
     path('triathletes/edit/<int:pk>', views.athlete_edit_view, name="athlete_edit"),
     path('triathletes/delete/<int:pk>', views.athlete_delete_view, name="athlete_delete"),
+    path('triathletes/<int:pk>', views.athlete_profile, name="athlete_profile"),
 
     path('categories', views.manage_categories, name='categories'),
     path('categories/add', views.category_add_view, name='category_add'),

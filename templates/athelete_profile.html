@@ -11,71 +11,119 @@
       <h4 class="mb-4" style="text-align: center;">Profil</h4>
 
       <div class='card bg-secondary mb-3' style="max-width: 600px; margin: 0 auto;">
+        {% if show_hello %}
         <div class='card-header d-flex justify-content-between align-items-center'>
-          <h4>Bonjour, <strong>{{ user.username }}</strong>!</h4>
+          <h4>Bonjour, <strong>{{ profile.username }}</strong>!</h4>
           <!-- <a class="btn btn-primary" href="">
             <i class='fas fa-edit'></i>
           </a> -->
         </div>
+        {% endif %}
         <div class='card-body'>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Nom d'utilisateur: <strong>{{ user.username }}</strong>
+              Nom d'utilisateur: <strong>{{ profile.username }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Nom: <strong>{{ user.first_name }}</strong>
+              Nom: <strong>{{ profile.first_name }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Prénom: <strong>{{ user.last_name }}</strong>
+              Prénom: <strong>{{ profile.last_name }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              E-mail: <strong>{{ user.email|default:'-' }}</strong>
+              E-mail: <strong>{{ profile.email|default:'-' }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Date de naissance: <strong>{{ user.profile_triathlete.date_of_birth|default:'-' }}</strong>
+              Date de naissance: <strong>{{ profile.profile_triathlete.date_of_birth|default:'-' }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Sexe: <strong>{{ user.profile_triathlete.gender|default:'-' }}</strong>
+              Sexe: <strong>{{ profile.profile_triathlete.gender|default:'-' }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Adresse: <strong>{{ user.profile_triathlete.adresse|default:'-' }}</strong>
+              Adresse: <strong>{{ profile.profile_triathlete.adresse|default:'-' }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Numéro de téléphone: <strong>{{ user.profile_triathlete.phone_number|default:'-' }}</strong>
+              Numéro de téléphone: <strong>{{ profile.profile_triathlete.phone_number|default:'-' }}</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Poids: <strong>{{ user.profile_triathlete.weight|default:'-' }}</strong>
+              Poids: <strong>{{ profile.profile_triathlete.weight|default:'-' }} kg</strong>
             </p>
           </div>
 
           <div class='d-flex w-100 justify-content-between'>
             <p class='mb-1'>
-              Hauteur: <strong>{{ user.profile_triathlete.height|default:'-' }}</strong>
+              Hauteur: <strong>{{ profile.profile_triathlete.height|default:'-' }} cm</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Masse musculaire (%): <strong>{{ profile.profile_triathlete.masse_masculaire|default:'-' }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              IMC: <strong>{{ profile.profile_triathlete.imc|default:'-' }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Masse Grasse (%): <strong>{{ profile.profile_triathlete.mass_grasse|default:'-' }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Niveau d'ctivité physique:
+              <strong>{{ profile.profile_triathlete.get_niveau_activite_display|default:'-' }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Métabolisme de base(Kcal):
+              <strong>{{ profile.profile_triathlete.metabolisme_de_base|default:'-' }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Dépense énergétique journalière(Kcal):
+              <strong>{{ profile.profile_triathlete.depense_energetique_journaliere|default:'-' }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Consommation d'eau quotidienne:
+              <strong>{{ profile.profile_triathlete.daily_water_consumption|default:'-' }} ml</strong>
             </p>
           </div>
 

@@ -375,11 +375,35 @@ def profile(request):
     if request.user.role == User.UserRoles.ADMIN:
         return render(request, 'admin_profile.html')
     elif request.user.role == User.UserRoles.TRIATHLETE:
-        return render(request, 'athelete_profile.html')
+        return render(request, 'athelete_profile.html', {
+            "profile": request.user,
+            "show_hello": True,
+        })
     elif request.user.role == User.UserRoles.ENTRAINEUR:
-        return render(request, 'trainer_profile.html')
+        return render(request, 'trainer_profile.html', {
+            "profile": request.user,
+            "show_hello": True,
+        })
     else:
         return HttpResponse('profile')
+
+
+@login_required
+def athlete_profile(request, pk):
+    athelte = User.objects.get(pk=pk)
+    return render(request, 'athelete_profile.html', {
+        'profile': athelte,
+        "show_hello": False,
+    })
+
+
+@login_required
+def trainer_profile(request, pk):
+    trainer = User.objects.get(pk=pk)
+    return render(request, 'trainer_profile.html', {
+        'profile': trainer,
+        "show_hello": False,
+    })
 
 
 @login_required
