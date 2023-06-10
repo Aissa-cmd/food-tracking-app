@@ -54,4 +54,28 @@
     </div>
 </div>
 
+<script>
+    const weightInput = document.getElementById('id_weight_g');
+    const energyValueInput = document.getElementById('id_energy_value');
+    const totalEnergyValueInput = document.getElementById('id_total_energy_value');
+
+    totalEnergyValueInput.value = weightInput.value * energyValueInput.value;
+
+    function weightHandler(e) {
+        const total = energyValueInput.value * e.target.value;
+        totalEnergyValueInput.value = total || 0;
+    }
+
+    function energyValueHandler(e) {
+        const total = weightInput.value * e.target.value;
+        totalEnergyValueInput.value = total || 0;
+    }
+
+    weightInput.addEventListener('change', weightHandler, false);
+    weightInput.addEventListener('input', weightHandler, false);
+
+    energyValueInput.addEventListener('change', energyValueHandler, false);
+    energyValueInput.addEventListener('input', energyValueHandler, false);
+</script>
+
 {% endblock body %}

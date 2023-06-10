@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Food Tracker | {{ title }}{% endblock %}
+
+{% block body %}
+
+<div class='py-4 mt-auto'>
+  <div class='container px-4'>
+
+    <!-- {% if success %}
+        <br>
+        <div class='alert alert-dismissible alert-success' role='alert'>
+            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+            The new food item added successfully.
+        </div>
+        {% else %} -->
+    <div class='d-flex justify-content-center'>
+      <h3>Modifier l'image de l'aliment <strong>{{ aliment.name }}</strong></h3>
+    </div>
+    <!-- <div class='d-flex justify-content-center'>
+            <p>Enter the details of a new food item</p>
+        </div> -->
+
+    <div class='row'>
+      <div class='col-lg-6 offset-lg-3'>
+        <div class='card bg-secondary mb-3'>
+          <div class='card-body'>
+
+            <div class='form-group'>
+              <form action="{% url 'aliment_edit_image' pk=aliment.id %}" method='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class='form-group'>
+                  <!-- {{ form.as_p }} -->
+                  <div class="form-group">
+                    <p>
+                      <label for="image">Image</label>
+                      <input class="form-control" type="file" name="image" id="image">
+                    </p>
+                  </div>
+                  <button type='submit' class='btn btn-primary'>Enregistrer</button>
+                  <a href="{% url 'aliments' %}" class='btn btn-outline-dark'>Annuler</a>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock body %}

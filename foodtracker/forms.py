@@ -139,6 +139,22 @@ class AlimentForm(forms.Form):
             visible.field.widget.attrs['class'] = 'form-control'
 
 
+class AlimentEditForm(forms.Form):
+    name = forms.CharField(label='Nom')
+    category = forms.ModelChoiceField(label='Catégorie', queryset=AlimentCategory.objects.all())
+    weight_g = forms.DecimalField(label='Le poids en gramme')
+    energy_value = forms.DecimalField(label='Valeur énergétique (kcal/g)')
+    total_energy_value = forms.DecimalField(label='Valeur énergétique totale (kcal)', disabled=True, required=False)
+    protein =  forms.DecimalField(label="Protein")
+    carboheidrates = forms.DecimalField(label="Carboheidrates")
+    fat = forms.DecimalField(label="Fat")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+
 class AlimentCategoryForm(forms.Form):
     name = forms.CharField(label='Nom')
 

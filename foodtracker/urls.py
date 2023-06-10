@@ -44,6 +44,7 @@ urlpatterns = [
     path('aliments/<int:pk>', views.aliment_detail_view, name='aliment_detail'),
     path('aliments/add', views.aliment_add_view, name='aliement_add'),
     path('aliments/edit/<int:pk>', views.aliment_edit_view, name='aliment_edit'),
+    path('aliments/edit/<int:pk>/image', views.aliment_edit_image_view, name='aliment_edit_image'),
     path('aliments/delete/<int:pk>', views.aliment_delete_views, name='aliment_delete'),
 
     path('add-daily-food/<str:section>', views.add_daily_food, name='add_daily_food'),

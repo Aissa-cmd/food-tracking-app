@@ -36,6 +36,7 @@ from .forms import (
     TriathleteForm,
     TriathleteEditForm,
     AlimentForm,
+    AlimentEditForm,
     AlimentCategoryForm,
     TriathleteCompleteSetupForm,
 )
@@ -760,10 +761,13 @@ def aliment_add_view(request):
         aliment_form = AlimentForm(request.POST, request.FILES)
         if aliment_form.is_valid():
             image = aliment_form.cleaned_data['image']
-            category = aliment_form.cleaned_data['category']
             name = aliment_form.cleaned_data['name']
+            category = aliment_form.cleaned_data['category']
             weight_g = aliment_form.cleaned_data['weight_g']
             energy_value = aliment_form.cleaned_data['energy_value']
+            protein = aliment_form.cleaned_data['protein']
+            carboheidrates = aliment_form.cleaned_data['carboheidrates']
+            fat = aliment_form.cleaned_data['fat']
             # create aliment
             new_aliment = Aliment.objects.create(
                 image=image,
@@ -771,6 +775,9 @@ def aliment_add_view(request):
                 category=category,
                 weight_g=weight_g,
                 energy_value=energy_value,
+                protein=protein,
+                carboheidrates=carboheidrates,
+                fat=fat,
             )
             new_aliment.save()
             messages.success(request, f"L' aliment a été créé avec succès")
@@ -789,26 +796,55 @@ def aliment_edit_view(request, pk):
     try:
         aliment = Aliment.objects.get(pk=pk)
         if request.method == 'POST':
-            form = AlimentForm(request.POST, request.FILES)
+            form = AlimentEditForm(request.POST)
             if form.is_valid():
-                ...
+                aliment.name = form.cleaned_data.get('name', aliment.name)
+                aliment.category = form.cleaned_data.get('category', aliment.category)
+                aliment.weight_g = form.cleaned_data.get('weight_g', aliment.weight_g)
+                aliment.energy_value = form.cleaned_data.get('energy_value', aliment.energy_value)
+                aliment.protein = form.cleaned_data.get('protein', aliment.protein)
+                aliment.carboheidrates = form.cleaned_data.get('carboheidrates', aliment.carboheidrates)
+                aliment.fat = form.cleaned_data.get('fat', aliment.fat)
+                aliment.save()
+                messages.success(request, "Les informations de l'aliment ont été mises à jour avec succès")
+                return redirect(reverse('aliments'))
             else:
                 return render(request, 'aliment_edit.html', {
                     'aliment': aliment,
                     'form': form,
                 })
         else:
-            form = AlimentForm({
-                'image': aliment.image,
+            form = AlimentEditForm({
                 'name': aliment.name,
                 'category': aliment.category,
                 'weight_g': aliment.weight_g,
                 'energy_value': aliment.energy_value,
                 'total_energy_value': aliment.weight_g * aliment.energy_value,
+                'protein': aliment.protein,
+                'carboheidrates': aliment.carboheidrates,
+                'fat': aliment.fat,
             })
             return render(request, 'aliment_edit.html', {
                 'aliment': aliment,
                 'form': form,
+            })
+    except Aliment.DoesNotExist:
+        messages.error(request, "L'aliment n'existe pas")
+        return redirect(reverse('aliments'))
+
+
+@login_required
+def aliment_edit_image_view(request, pk):
+    try:
+        aliment = Aliment.objects.get(pk=pk)
+        if request.method == 'POST':
+            aliment.image = request.FILES['image']
+            aliment.save()
+            messages.success(request, "L'image de l'aliment ont été mises à jour avec succès")
+            return redirect(reverse('aliments'))
+        else:
+            return render(request, 'aliment_edit_image.html', {
+                'aliment': aliment,
             })
     except Aliment.DoesNotExist:
         messages.error(request, "L'aliment n'existe pas")
