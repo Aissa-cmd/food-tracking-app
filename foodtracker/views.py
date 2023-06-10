@@ -99,6 +99,11 @@ def dashboard(request):
             'daily_water_goal': daily_water_goal,
             'water_consumption_count': water_consumption_count,
         })
+    elif request.user.role == User.UserRoles.ENTRAINEUR:
+        triathlete = Triathlete.objects.all()
+        return render(request, 'trainer_dashboard.html', {
+            'triathlete': triathlete,
+        })
     return render(request, 'dashboard.html')
 
 
@@ -127,6 +132,102 @@ def daily_food_history(request):
     return render(request, 'daily_food_history.html', {
         'daily_foods_meta_date': daily_foods_meta_date,
         'calories_goal': calories_goal,
+    })
+
+
+@login_required
+def athlete_daily_food_history(request, pk):
+    athlete = User.objects.get(pk=pk)
+    daily_foods = DailyFood.objects.filter(athlete_id=athlete.id, date__lt=timezone.localdate())
+    calories_goal = athlete.profile_triathlete.depense_energetique_journaliere
+    daily_foods_meta_date = map(lambda x: get_daily_food_metadata(x, calories_goal), daily_foods)
+    return render(request, 'athelete_daily_food_history.html', {
+        'daily_foods_meta_date': daily_foods_meta_date,
+        'calories_goal': calories_goal,
+        'athlete': athlete,
+    })
+
+
+@login_required
+def athlete_daily_food_today_details(request, pk):
+    athlete = User.objects.get(pk=pk)
+    try:
+        daily_food = DailyFood.objects.get(date=timezone.localdate(), athlete_id=athlete.id)
+        daily_food_details = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id)
+        breakfast = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.BREAKFAST)
+        lunch = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.LUNCH)
+        dinner = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.DINNER)
+        snack = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.SNACK)
+        exercises = DailyExerciseDetails.objects.filter(detail_food__id=daily_food.id)
+        goal_count = athlete.profile_triathlete.depense_energetique_journaliere
+        aliments_count = builtins.sum(builtins.map(lambda x: x.total_energy_value, daily_food_details))
+        exercise_count = builtins.sum(builtins.map(lambda x: x.burned_calories, exercises))
+        remaining_count = goal_count - aliments_count + exercise_count
+        daily_water_goal = daily_food.daily_water_consumption
+        water_consumption_count = daily_food.water_consumption_count
+    except DailyFood.DoesNotExist:
+        daily_food = DailyFood.objects.create(
+            athlete=athlete,
+            daily_water_consumption=athlete.profile_triathlete.daily_water_consumption,
+        )
+        breakfast = []
+        lunch = []
+        dinner = []
+        snack = []
+        exercises = []
+        goal_count = athlete.profile_triathlete.depense_energetique_journaliere
+        aliments_count = 0
+        exercise_count = 0
+        remaining_count = goal_count - aliments_count + exercise_count
+        daily_water_goal = athlete.profile_triathlete.daily_water_consumption
+        water_consumption_count = 0
+    return render(request, 'athlete_daily_food_history_details.html', {
+        'athlete': athlete,
+        'daily_food': daily_food,
+        'breakfast': breakfast,
+        'lunch': lunch,
+        'dinner': dinner,
+        'snack': snack,
+        'exercises': exercises,
+        'goal_count': goal_count,
+        'aliments_count': aliments_count,
+        'exercise_count': exercise_count,
+        'remaining_count': remaining_count,
+        'daily_water_goal': daily_water_goal,
+        'water_consumption_count': water_consumption_count,
+    })
+
+
+@login_required
+def athlete_daily_food_history_details(request, pk, df):
+    athlete = User.objects.get(pk=pk)
+    daily_food = DailyFood.objects.get(pk=df)
+    daily_food_details = DailyFoodDetails.objects.filter(detail_food__id=daily_food.id)
+    breakfast = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.BREAKFAST)
+    lunch = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.LUNCH)
+    dinner = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.DINNER)
+    snack = daily_food_details.filter(day_section=DailyFoodDetails.DaySection.SNACK)
+    exercises = DailyExerciseDetails.objects.filter(detail_food__id=daily_food.id)
+    goal_count = athlete.profile_triathlete.depense_energetique_journaliere
+    aliments_count = builtins.sum(builtins.map(lambda x: x.total_energy_value, daily_food_details))
+    exercise_count = builtins.sum(builtins.map(lambda x: x.burned_calories, exercises))
+    remaining_count = goal_count - aliments_count + exercise_count
+    daily_water_goal = daily_food.daily_water_consumption
+    water_consumption_count = daily_food.water_consumption_count
+    return render(request, 'athlete_daily_food_history_details.html', {
+        'athlete': athlete,
+        'daily_food': daily_food,
+        'breakfast': breakfast,
+        'lunch': lunch,
+        'dinner': dinner,
+        'snack': snack,
+        'exercises': exercises,
+        'goal_count': goal_count,
+        'aliments_count': aliments_count,
+        'exercise_count': exercise_count,
+        'remaining_count': remaining_count,
+        'daily_water_goal': daily_water_goal,
+        'water_consumption_count': water_consumption_count,
     })
 
 
@@ -275,6 +376,8 @@ def profile(request):
         return render(request, 'admin_profile.html')
     elif request.user.role == User.UserRoles.TRIATHLETE:
         return render(request, 'athelete_profile.html')
+    elif request.user.role == User.UserRoles.ENTRAINEUR:
+        return render(request, 'trainer_profile.html')
     else:
         return HttpResponse('profile')
 

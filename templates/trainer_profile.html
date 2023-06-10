@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Food Tracker | Admin Profile{% endblock %}
+
+{% block body %}
+<div class='py-4 mt-auto'>
+  <div class='container-fluid px-4'>
+    <div>
+      <h4 class="mb-4" style="text-align: center;">Profil</h4>
+
+      <div class='card bg-secondary mb-3' style="max-width: 600px; margin: 0 auto;">
+        <div class='card-header d-flex justify-content-between align-items-center'>
+          <h4>Bonjour, <strong>{{ user.username }}</strong>!</h4>
+        </div>
+        <div class='card-body'>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Nom d'utilisateur: <strong>{{ user.username }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Nom: <strong>{{ user.first_name }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Prénom: <strong>{{ user.last_name }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              E-mail: <strong>{{ user.email|default:'-' }}</strong>
+            </p>
+          </div>
+
+          <div class='d-flex w-100 justify-content-between'>
+            <p class='mb-1'>
+              Numéro de téléphone: <strong>{{ user.profile_triathlete.phone_number|default:'-' }}</strong>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+{{ block.super }}
+
+<!-- Page level plugins -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static 'js/userProfile.js' %}"></script>
+{% endblock %}

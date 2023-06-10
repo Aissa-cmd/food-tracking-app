@@ -55,5 +55,9 @@ urlpatterns = [
     path('add-daily-water', views.add_daily_water, name='add_daily_water'),
 
     path('daily-food-history', views.daily_food_history, name='daily_food_history'),
-    path('daily-food-history-details/<int:pk>', views.daily_food_history_details, name='daily_food_history_details'),
+    path('daily-food-history/<int:pk>/details', views.daily_food_history_details, name='daily_food_history_details'),
+
+    path('athlete-daily-food-history/<int:pk>', views.athlete_daily_food_history, name='athlete_daily_food_history'),
+    path('athlete-daily-food-history/<int:pk>/<int:df>/details', views.athlete_daily_food_history_details, name='athlete_daily_food_history_details'),
+    path('athlete-daily-food-today-details/<int:pk>', views.athlete_daily_food_today_details, name='athlete_daily_food_today_details'),
 ]

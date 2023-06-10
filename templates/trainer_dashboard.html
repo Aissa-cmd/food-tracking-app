@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Food Tracker | {{ title }}{% endblock %}
+
+{% block body %}
+
+<div class="mt-4 mb-4 d-flex align-items-center justify-content-between">
+  <h4>Liste des triathletes</h4>
+</div>
+
+<table class="table caption-top">
+  <thead class="table-light">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Nom d'utilisateur</th>
+      <th scope="col">Prénom</th>
+      <th scope="col">Nom</th>
+      <th scope="col">E-mail</th>
+      <!-- <th scope="col">Numéro de téléphone</th> -->
+      <th scope="col">Sexe</th>
+      <th scope="col">Date de naissance</th>
+      <!-- <th scope="col">adresse</th> -->
+      <th scope="col">Poids</th>
+      <th scope="col">Hauteur</th>
+      <th scope="col">Calories quotidiennes</th>
+      <th scope="col" class="text-center">Aujourd'hui</th>
+      <th scope="col" class="text-center">Historique</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for atl in triathlete %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ atl.user.username }}</td>
+      <td>{{ atl.user.last_name }}</td>
+      <td>{{ atl.user.first_name }}</td>
+      <td>{{ atl.user.email|default:'-' }}</td>
+      <!-- <td>{{ atl.phone_number|default:'-' }}</td> -->
+      <td>{{ atl.gender|default:'-' }}</td>
+      <td>{{ atl.date_of_birth|default:'-' }}</td>
+      <!-- <td>{{ atl.address|default:'-' }}</td> -->
+      <td>{{ atl.weight|default:'-' }}</td>
+      <td>{{ atl.height|default:'-' }}</td>
+      <td>{{ atl.depense_energetique_journaliere|default:'-' }}</td>
+      <td class="text-center">
+        <a class="btn btn-primary" href="{% url 'athlete_daily_food_today_details' pk=atl.user.id %}">
+          <!-- <i class="fas fa-sharp fa-solid fa-pen"></i> -->
+          <i class="fas fa-calendar-day"></i>
+        </a>
+      </td>
+      <td class="text-center">
+        <a class="btn btn-primary" href="{% url 'athlete_daily_food_history' pk=atl.user.id %}">
+          <i class="fas fa-history"></i>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock body %}
