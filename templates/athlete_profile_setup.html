@@ -42,7 +42,7 @@
           <div class='card-body'>
 
             <div class='form-group'>
-              <form action="{% url 'athlete-profile-setup' %}" method='POST'>
+              <form action="{% url 'athlete-profile-setup' %}" method='POST' enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class='form-group'>
                   <!-- {{ form.as_p }} -->

@@ -4,10 +4,23 @@
 
 {% block title %}TriFeul+ | Admin Profile{% endblock %}
 
+{% block styles %}
+<style>
+  .athelete-logo {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+  }
+</style>
+{% endblock %}
+
 {% block body %}
 <div class='py-4 mt-auto'>
   <div class='container-fluid px-4'>
     <div>
+      <div class="d-flex justify-content-center mb-3">
+        <img class="athelete-logo" src="{% if profile.profile_triathlete.image %}{{ profile.profile_triathlete.image.url }}{% else %}{% static 'images/default-profile-pic.jpg' %}{% endif %}" alt="athelete-image">
+      </div>
       <h4 class="mb-4" style="text-align: center;">Profil</h4>
 
       <div class='card bg-secondary mb-3' style="max-width: 600px; margin: 0 auto;">

@@ -40,8 +40,8 @@ class EntraineurForm(forms.Form):
     last_name = forms.CharField(label='Prénom')
     email = forms.EmailField(label='E-main', required=False)
     phone_number = forms.CharField(label='Numéro de téléphone')
-    password1 = forms.CharField(label='Mot de passe')
-    password2 = forms.CharField(label='Confirmez le mot de passe')
+    password1 = forms.CharField(label='Mot de passe', widget=forms.PasswordInput())
+    password2 = forms.CharField(label='Confirmez le mot de passe', widget=forms.PasswordInput())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -79,8 +79,8 @@ class TriathleteForm(forms.Form):
     # phone_number = forms.CharField(label='Numéro de téléphone')
     # weight = forms.CharField(label='weight')
     # height = forms.CharField(label='height')
-    password1 = forms.CharField(label='Mot de passe')
-    password2 = forms.CharField(label='Confirmez le mot de passe')
+    password1 = forms.CharField(label='Mot de passe', widget=forms.PasswordInput())
+    password2 = forms.CharField(label='Confirmez le mot de passe', widget=forms.PasswordInput())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -97,6 +97,7 @@ class TriathleteForm(forms.Form):
 
 
 class TriathleteCompleteSetupForm(forms.Form):
+    image = forms.ImageField(label='Image de profil', required=False)
     email = forms.EmailField(label='E-mail', required=False)
     date_of_birth = forms.DateField(label='Date de naissance', widget=forms.DateInput(attrs={'type': 'date'}))
     gender = forms.ChoiceField(label='Sexe', choices=GenderOptions.choices)

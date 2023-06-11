@@ -518,10 +518,11 @@ def manage_athletes(request):
 def athelete_profile_setup(request):
     if request.method == 'POST':
         user = request.user
-        form = TriathleteCompleteSetupForm(request.POST)
+        form = TriathleteCompleteSetupForm(request.POST, request.FILES)
         if form.is_valid():
             age = calculate_age(form.cleaned_data['date_of_birth'])
             user.email = form.cleaned_data.get('email', None)
+            user.profile_triathlete.image = form.cleaned_data.get('image', None)
             user.profile_triathlete.gender = form.cleaned_data['gender']
             user.profile_triathlete.date_of_birth = form.cleaned_data['date_of_birth']
             user.profile_triathlete.age = age

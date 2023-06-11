@@ -46,6 +46,7 @@ class Triathlete(models.Model):
         MORE_20H_WEEK = ('MORE_20H_WEEK', ">20h d'exercice par semaine")
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile_triathlete')
+    image = models.ImageField(upload_to='profile-images/', null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GenderOptions.choices, null=True)
     date_of_birth = models.DateField(null=True)
     age = models.IntegerField(null=True)
