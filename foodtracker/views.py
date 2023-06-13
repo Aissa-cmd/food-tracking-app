@@ -111,8 +111,11 @@ def dashboard(request):
 
 
 def get_daily_food_metadata(daily_food, calories_goal):
-    consumed_calories = daily_food.dailyfooddetails.values('detail_food_id').annotate(calories_count=Sum('total_energy_value'))[0]['calories_count']
-    exercices_count = daily_food.dailyexercisedetails.values('detail_food_id').annotate(calories_count=Sum('burned_calories'))[0]['calories_count']
+    consumed_calories = 0
+    if len(daily_food.dailyfooddetails.values('detail_food_id').annotate(calories_count=Sum('total_energy_value'))) > 0:
+        consumed_calories = daily_food.dailyfooddetails.values('detail_food_id').annotate(calories_count=Sum('total_energy_value'))[0]['calories_count']
+    if len(daily_food.dailyexercisedetails.values('detail_food_id').annotate(calories_count=Sum('burned_calories'))) > 0:
+        exercices_count = daily_food.dailyexercisedetails.values('detail_food_id').annotate(calories_count=Sum('burned_calories'))[0]['calories_count']
     consumed_calories = consumed_calories - exercices_count
     return {
         "daily_food": daily_food,
