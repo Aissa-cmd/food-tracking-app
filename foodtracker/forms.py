@@ -162,4 +162,22 @@ class AlimentCategoryForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'    
+            visible.field.widget.attrs['class'] = 'form-control'
+
+
+class ChangePasswordForm(forms.Form):
+    password1 = forms.CharField(label='Mot de passe', widget=forms.PasswordInput())
+    password2 = forms.CharField(label='Confirmez le mot de passe', widget=forms.PasswordInput())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data['password1']
+        password2 = cleaned_data['password2']
+        if password1 != password2:
+            raise forms.ValidationError({'password2': 'Les deux mots de passe ne correspondent pas'})
+        return cleaned_data

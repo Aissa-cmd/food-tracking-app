@@ -39,6 +39,7 @@ from .forms import (
     AlimentEditForm,
     AlimentCategoryForm,
     TriathleteCompleteSetupForm,
+    ChangePasswordForm,
 )
 
 
@@ -52,6 +53,70 @@ def index(request):
 @login_required
 def profile(request):
     pass
+
+
+def change_user_password():
+    pass
+
+
+@login_required
+def trainer_change_pswd_view(request, pk):
+    try:
+        trainer = Entraineur.objects.get(user__id=pk)
+    except Entraineur.DoesNotExist:
+        return redirect(reverse('entraineurs'))
+    if request.method == 'POST':
+        change_pswd_form = ChangePasswordForm(request.POST)
+        if change_pswd_form.is_valid():
+            trainer.user.set_password(change_pswd_form.cleaned_data['password1'])
+            trainer.user.save()
+            messages.success(request, f"Le mot de passe de {trainer.user.full_name} a été changé avec succès")
+            return redirect(reverse('entraineurs'))
+        else:
+            return render(request, 'change_password_view.html', {
+                'form_title': f"Changer le mot de passe du entraîneur: {trainer.user.full_name}",
+                'form': change_pswd_form,
+                'submit_url': 'trainer_change_pswd',
+                'submit_url_pk': trainer.user.id,
+                'cancel_url': 'entraineurs',
+            })
+    return render(request, 'change_password_view.html', {
+        'form_title': f"Changer le mot de passe du entraîneur: {trainer.user.full_name}",
+        'form': ChangePasswordForm(),
+        'submit_url': 'trainer_change_pswd',
+        'submit_url_pk': trainer.user.id,
+        'cancel_url': 'entraineurs',
+    })
+
+
+@login_required
+def athelete_change_pswd_view(request, pk):
+    try:
+        athelete = Triathlete.objects.get(user__id=pk)
+    except Triathlete.DoesNotExist:
+        return redirect(reverse('triathletes'))
+    if request.method == 'POST':
+        change_pswd_form = ChangePasswordForm(request.POST)
+        if change_pswd_form.is_valid():
+            athelete.user.set_password(change_pswd_form.cleaned_data['password1'])
+            athelete.user.save()
+            messages.success(request, f"Le mot de passe de {athelete.user.full_name} a été changé avec succès")
+            return redirect(reverse('entraineurs'))
+        else:
+            render(request, 'change_password_view.html', {
+                'form_title': f"Changer le mot de passe de triathlete: {athelete.user.full_name}",
+                'form': ChangePasswordForm(),
+                'submit_url': 'athlete_change_pswd',
+                'submit_url_pk': athelete.user.id,
+                'cancel_url': 'triathletes',
+            })
+    return render(request, 'change_password_view.html', {
+        'form_title': f"Changer le mot de passe de triathlete: {athelete.user.full_name}",
+        'form': ChangePasswordForm(),
+        'submit_url': 'athlete_change_pswd',
+        'submit_url_pk': athelete.user.id,
+        'cancel_url': 'triathletes',
+    })
 
 
 @login_required

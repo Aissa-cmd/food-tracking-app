@@ -30,6 +30,7 @@
       <th scope="col">Numéro de téléphone</th>
       <th scope="col" class="text-center">Modifier</th>
       <th scope="col" class="text-center">Supprimer</th>
+      <th scope="col" class="text-center">Changer le mot de passe</th>
     </tr>
   </thead>
   <tbody>
@@ -54,6 +55,11 @@
       <td class="text-center">
         <a class="btn btn-danger" href="{% url 'trainer_delete' pk=ent.user.id %}">
           <i class="fas fa-solid fa-trash"></i>
+        </a>
+      </td>
+      <td class="text-center">
+        <a class="btn btn-primary" href="{% url 'trainer_change_pswd' pk=ent.user.id %}">
+          <i class="fas fa-solid fa-lock"></i>
         </a>
       </td>
     </tr>

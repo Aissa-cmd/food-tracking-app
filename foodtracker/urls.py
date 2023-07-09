@@ -19,13 +19,11 @@ urlpatterns = [
     path('food/foodlog/delete/<int:food_id>', views.food_log_delete, name='food_log_delete'),
     path('food/<str:food_id>', views.food_details_view, name='food_details'),
 
-    # path('categories', views.categories_view, name='categories_view'),
-    # path('categories/<str:category_name>', views.category_details_view, name='category_details_view'),
-
     path('entraineurs', views.manage_trainers, name='entraineurs'),
     path('entraineurs/add', views.trainers_add_view, name='trainer_add'),
     path('entraineurs/edit/<int:pk>', views.trainers_edit_view, name='trainer_edit'),
     path('entraineurs/delete/<int:pk>', views.trainers_delete_view, name='trainer_delete'),
+    path('entraineurs/change-pswd/<int:pk>', views.trainer_change_pswd_view, name='trainer_change_pswd'),
     path('entraineurs/<int:pk>', views.trainer_profile, name="trainer_profile"),
 
     path('triathletes', views.manage_athletes, name='triathletes'),
@@ -33,6 +31,7 @@ urlpatterns = [
     path('triathletes/add', views.athlete_add_view, name='athlete_add'),
     path('triathletes/edit/<int:pk>', views.athlete_edit_view, name="athlete_edit"),
     path('triathletes/delete/<int:pk>', views.athlete_delete_view, name="athlete_delete"),
+    path('triathletes/change-pswd/<int:pk>', views.athelete_change_pswd_view, name="athlete_change_pswd"),
     path('triathletes/<int:pk>', views.athlete_profile, name="athlete_profile"),
 
     path('categories', views.manage_categories, name='categories'),

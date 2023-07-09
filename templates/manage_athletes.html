@@ -2,12 +2,6 @@
 
 {% block title %}TriFeul+ | {{ title }}{% endblock %}
 
-{% block styles %}
-<style>
-  main {}
-</style>
-{% endblock styles %}
-
 {% block body %}
 
 {% if messages %}
@@ -30,7 +24,6 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Nom d'utilisateur</th>
-      <th scope="col">Prénom</th>
       <th scope="col">Nom</th>
       <th scope="col">Sexe</th>
       <th scope="col">Poids</th>
@@ -40,6 +33,7 @@
       <th scope="col" class="text-center">Supprimer</th>
       <th scope="col" class="text-center">Aujourd'hui</th>
       <th scope="col" class="text-center">Historique</th>
+      <th scope="col" class="text-center">Changer le mot de passe</th>
     </tr>
   </thead>
   <tbody>
@@ -49,8 +43,7 @@
       <td>
         <a href="{% url 'athlete_profile' pk=atl.user.id %}">{{ atl.user.username }}</a>
       </td>
-      <td>{{ atl.user.last_name }}</td>
-      <td>{{ atl.user.first_name }}</td>
+      <td>{{ atl.user.last_name }} {{ atl.user.first_name }}</td>
       <td>{{ atl.gender|default:'-' }}</td>
       <td>{{ atl.weight|default:'-' }}</td>
       <td>{{ atl.height|default:'-' }}</td>
@@ -73,6 +66,11 @@
       <td class="text-center">
         <a class="btn btn-primary" href="{% url 'athlete_daily_food_history' pk=atl.user.id %}">
           <i class="fas fa-history"></i>
+        </a>
+      </td>
+      <td class="text-center">
+        <a class="btn btn-primary" href="{% url 'athlete_change_pswd' pk=atl.user.id %}">
+          <i class="fas fa-lock"></i>
         </a>
       </td>
     </tr>
