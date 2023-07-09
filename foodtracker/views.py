@@ -364,7 +364,7 @@ def add_daily_food_config(request, section, aliment_id):
             carboheidrates=carboheidrates, 
             fat=fat, 
         )
-        return redirect(reverse('dashboard'))
+        return redirect(reverse('add_daily_food', args=(section,)))
     return render(request, 'add_daily_food_config.html', {
         'aliment': aliment,
         'day_section': section,
@@ -995,12 +995,12 @@ def login_view(request):
                     return redirect(reverse('athlete-profile-setup'))
                 return redirect(reverse('dashboard'))
         else:
-            return render(request, 'login.html', {
+            return render(request, 'index.html', {
                 'message': "Nom d'utilisateur et / ou mot de passe incorrect.",
                 'categories': FoodCategory.objects.all()
             })
     else:
-        return render(request, 'login.html',  {
+        return render(request, 'index.html',  {
             'categories': FoodCategory.objects.all()
         })
 
